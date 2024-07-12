@@ -11,11 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hexlet/chat-server": "^2.0.3",
-    "react-scripts": "^3.0.1"
-  },
-  "devDependencies": {
-    "eslint": "^8.23.0",
-    "eslint-plugin-react": "^7.34.3"
+    "@hexlet/chat-server": "^2.0.3"
   }
 }
