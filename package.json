@@ -1,0 +1,21 @@
+{
+  "name": "frontend-project-12",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/mkh1n/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/mkh1n/frontend-project-12/actions)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build --prefix frontend",
+    "start": "npx start-server -s ./frontend/build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hexlet/chat-server": "^2.0.3",
+    "react-scripts": "^3.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-plugin-react": "^7.34.3"
+  }
+}
