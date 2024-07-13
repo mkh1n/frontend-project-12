@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/mkh1n/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/mkh1n/frontend-project-12/actions)",
   "main": "index.js",
+  "workspaces": ["frontend"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build --prefix frontend",
