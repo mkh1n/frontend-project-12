@@ -1,39 +1,61 @@
-import React from 'react';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import Header from './Header';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Row, Col, Card, Form, Button } from 'react-bootstrap';
+import MainContainer from './MainContainer';
+import routes from '../routes';
 import { useFormik } from 'formik';
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux'
+import { setCurrentUser } from '../slices/authSlice';
 
 export default () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+
   const f = useFormik({
     initialValues: {
-      login: '',
+      username: '',
       password: ''
     },
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      try {
+        const res = await axios.post(routes.loginPath(), values);
+        const { token, username } = res.data;
+        localStorage.setItem('user', JSON.stringify({token, username}));
+        dispatch(setCurrentUser({ user: username, token }))
+        navigate("/");
+      } catch (err) {
+        f.setSubmitting(false);
+        if (err.isAxiosError && err.response.status === 401) {
+          setError('Неверные имя пользователя или пароль');
+        } else {
+          throw err;
+        }
+      }
     },
   });
 
   return (
-    <Container fluid className="h-100 p-0">
-      <Header />
+    <MainContainer>
       <Row className="justify-content-center align-content-center h-100">
         <Col xs={12} md={8} xxl={6}>
           <Card className="shadow-sm">
             <Card.Body className='row p-5'>
               <Col xs={12} md={6} className="d-flex align-items-center justify-content-center">
-                <img src="https://www.ukpropertyaccountants.co.uk/wp-content/uploads/2023/06/10312222_18208786-min-scaled.jpg" alt="Войти" className="rounded-circle mb-4" style={{width: "200px"}}/>
+                <img src="https://www.ukpropertyaccountants.co.uk/wp-content/uploads/2023/06/10312222_18208786-min-scaled.jpg" alt="Войти" className="rounded-circle mb-4" style={{ width: "200px" }} />
               </Col>
               <Col xs={12} md={6}>
                 <Form onSubmit={f.handleSubmit}>
                   <h1 className="text-center mb-4">Войти</h1>
                   <Form.Group controlId="username" className="form-floating mb-3">
-                    <Form.Control type="text" placeholder="Ваш ник" required value={f.values.login} onChange={f.handleChange} />
+                    <Form.Control type="text" placeholder="Ваш ник" required value={f.values.username} onChange={f.handleChange} isInvalid={error !== ''} />
                     <Form.Label>Ваш ник</Form.Label>
                   </Form.Group>
                   <Form.Group controlId="password" className="form-floating mb-4">
-                    <Form.Control type="password" placeholder="Пароль" required value={f.values.password} onChange={f.handleChange} />
+                    <Form.Control type="password" placeholder="Пароль" required value={f.values.password} onChange={f.handleChange} isInvalid={error !== ''} />
                     <Form.Label>Пароль</Form.Label>
+                    {error && <div class="invalid-tooltip">{error}</div>}
                   </Form.Group>
                   <Button variant="outline-primary" type="submit" className="w-100 mb-3">
                     Войти
@@ -47,6 +69,6 @@ export default () => {
           </Card>
         </Col>
       </Row>
-    </Container>
+    </MainContainer>
   )
 }
