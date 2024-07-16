@@ -8,6 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux'
 import { setCurrentUser } from '../slices/authSlice';
 
+const sendAuthRequest = async (dispatch, loginValues) => {
+  const res = await axios.post(routes.loginPath(), loginValues);
+  const { token, username } = res.data;
+  dispatch(setCurrentUser({ user: username, token }))
+} 
 export default () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -20,10 +25,7 @@ export default () => {
     },
     onSubmit: async (values) => {
       try {
-        const res = await axios.post(routes.loginPath(), values);
-        const { token, username } = res.data;
-        localStorage.setItem('user', JSON.stringify({token, username}));
-        dispatch(setCurrentUser({ user: username, token }))
+        await sendAuthRequest(dispatch, values)
         navigate("/");
       } catch (err) {
         f.setSubmitting(false);
