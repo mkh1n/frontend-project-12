@@ -11,7 +11,7 @@ import { setCurrentUser } from '../slices/authSlice';
 const sendAuthRequest = async (dispatch, loginValues) => {
   const res = await axios.post(routes.loginPath(), loginValues);
   const { token, username } = res.data;
-  dispatch(setCurrentUser({ user: username, token }))
+  dispatch(setCurrentUser({ name: username, token }))
 } 
 export default () => {
   const dispatch = useDispatch()

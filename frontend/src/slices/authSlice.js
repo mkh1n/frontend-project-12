@@ -12,8 +12,8 @@ const slice = createSlice({
   name: 'auth',
   initialState: getStateFromLocalStorage(),
   reducers: {
-    setCurrentUser: (state, {payload: { user, token },}) => {
-      state.user = user
+    setCurrentUser: (state, {payload: { name, token },}) => {
+      state.name = name
       state.token = token
       return state;
     },

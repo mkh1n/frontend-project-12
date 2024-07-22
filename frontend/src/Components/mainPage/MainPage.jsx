@@ -1,11 +1,12 @@
 import MainContainer from "../MainContainer";
-import { Container, Row} from 'react-bootstrap';
+import { Container, Row, Spinner} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { setChannelsList } from "../../slices/channelsSlice";
 import { selectCurrentUser } from "../../slices/authSlice";
+import { setMessages } from "../../slices/messagesSlice";
 
 import axios from "axios";
 import routes from "../../routes";
@@ -18,35 +19,55 @@ const fetchChannels = async (token, dispatch) => {
     headers: {
       Authorization: `Bearer ${token}`,
     }});
-  console.log(res.data);
   dispatch(setChannelsList(res.data))
   return res.data
-}
+};
+
+const fetchMessages = async (token, dispatch) => {
+  console.log(token)
+  const res = await axios.get(routes.messagesPath(), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }});
+  dispatch(setMessages(res.data))
+  return res.data
+};
 
 export default () => {
+  const [loading, setLoading] = useState(true);
+
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect( async () => {
+    setLoading(true)
     const userString = localStorage.getItem("user");
-    console.log(userString)
     if (!userString) {
       navigate("login");  
     } else {
-      console.log(currentUser)
-      await fetchChannels(currentUser.token, dispatch)
+      await fetchChannels(currentUser.token, dispatch);
+      await fetchMessages(currentUser.token, dispatch);
+      setLoading(false)
     }
   }, [currentUser, dispatch]);
 
   return (
-      <MainContainer>
-      <Container fluid className="h-100 my-4 overflow-hidden rounded shadow">
-        <Row className="h-100 bg-white flex-md-row">
-          <Channels></Channels>
-          <Messages></Messages>
-        </Row>
-      </Container>
-      </MainContainer>
-    );
+    <MainContainer>
+      {(loading) ? (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      ) : (
+        <Container fluid className="h-100 my-4 overflow-hidden rounded shadow">
+          <Row className="h-100 bg-white flex-md-row">
+            <Channels></Channels>
+            <Messages></Messages>
+          </Row>
+        </Container>
+      )}
+    </MainContainer>
+  );
 }
