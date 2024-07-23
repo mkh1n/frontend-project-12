@@ -13,12 +13,16 @@ const slice = createSlice({
       state.push(payload);
     },
     removeMessage: (state, {payload}) => {
-      state = state.filter((message)=> message.id !== payload);
-    }
+      console.log(payload)
+      return state.filter((message) => message.id !== payload);
+    },
+    editMessage: (state, {payload}) => {
+      return state.map((message) => message.id == payload.id ? payload : message);
+    },
   },
 })
 
-export const { setMessages, addMessage, removeMessage } = slice.actions
+export const { setMessages, addMessage, removeMessage, editMessage } = slice.actions
 
 export default slice.reducer
 

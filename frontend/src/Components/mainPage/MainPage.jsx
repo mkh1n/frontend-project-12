@@ -1,5 +1,5 @@
 import MainContainer from "../MainContainer";
-import { Container, Row, Spinner} from 'react-bootstrap';
+import { Container, Row, Spinner } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { setChannelsList } from "../../slices/channelsSlice";
 import { selectCurrentUser } from "../../slices/authSlice";
 import { setMessages } from "../../slices/messagesSlice";
-
+import subscribeToSocketEvents from "../../socket";
 import axios from "axios";
 import routes from "../../routes";
 import Channels from "./Channels";
@@ -18,7 +18,8 @@ const fetchChannels = async (token, dispatch) => {
   const res = await axios.get(routes.channelsPath(), {
     headers: {
       Authorization: `Bearer ${token}`,
-    }});
+    }
+  });
   dispatch(setChannelsList(res.data))
   return res.data
 };
@@ -28,7 +29,8 @@ const fetchMessages = async (token, dispatch) => {
   const res = await axios.get(routes.messagesPath(), {
     headers: {
       Authorization: `Bearer ${token}`,
-    }});
+    }
+  });
   dispatch(setMessages(res.data))
   return res.data
 };
@@ -40,17 +42,19 @@ export default () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect( async () => {
+  useEffect(async () => {
     setLoading(true)
     const userString = localStorage.getItem("user");
     if (!userString) {
-      navigate("login");  
+      navigate("login");
     } else {
       await fetchChannels(currentUser.token, dispatch);
       await fetchMessages(currentUser.token, dispatch);
+      subscribeToSocketEvents();
       setLoading(false)
     }
   }, [currentUser, dispatch]);
+
 
   return (
     <MainContainer>
@@ -61,7 +65,7 @@ export default () => {
           </Spinner>
         </div>
       ) : (
-        <Container fluid className="h-100 my-4 overflow-hidden rounded shadow">
+        <Container fluid className="h-100 overflow-hidden border-top">
           <Row className="h-100 bg-white flex-md-row">
             <Channels></Channels>
             <Messages></Messages>

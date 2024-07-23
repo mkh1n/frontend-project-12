@@ -1,51 +1,136 @@
-import React from 'react';
-import { OverlayTrigger, Tooltip, Dropdown } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Form, Modal, Button } from 'react-bootstrap';
 import routes from '../../routes';
-import { removeMessage } from '../../slices/messagesSlice';
+import { BsPencilFill, BsTrash2Fill } from 'react-icons/bs';
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../slices/authSlice';
-import axios from 'axios';
+import { useFormik } from 'formik';
+import { editMessage, removeMessage } from '../../slices/messagesSlice';
 
-const removeMessageRequest = (dispatch, token, id) => {
-  axios.delete(routes.messagePath(id), {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  dispatch(removeMessage(id));
+
+const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, token }) => {
+
+  const handleSubmit = async () => {
+    removeMessageHandler(token)
+    handleCloseModal();
+  }
+
+  return (
+    <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Удалить сообщение</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Вы действительно хотите <b>удалить</b> сообщение?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseModal}>
+          Отменить
+        </Button>
+        <Button variant="danger" onClick={handleSubmit}>
+          Удалить
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 };
 
 export default ({ username, body, id }) => {
-  const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
-  console.log(username)
-  const dropdown = (
-    <Dropdown>
-      <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-          <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-        </svg>
-      </Dropdown.Toggle>
+  const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-      <Dropdown.Menu>
-        <Dropdown.Item onClick={removeMessageRequest(dispatch, currentUser.token, id)}>Удалить</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Изменить</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-  );
+  const dispatch = useDispatch();
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const editMessageHandler = async (id, token, body) => {
+    const res = await axios.patch(routes.messagePath(id), { body }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return res.data
+  };
+
+  const removeMessageHandler = (id) => async (token) => {
+    const res = await axios.delete(routes.messagePath(id), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data
+
+  };
+  const f = useFormik({
+    onSubmit: values => {
+      editMessageHandler(id, currentUser.token, values.editedMessage)
+      setIsEditing(false)
+    },
+    initialValues: {
+      editedMessage: body,
+    },
+  });
+
 
   return (
-    <div className="d-flex justify-content-between align-items-center text-break mb-2">
-      <div>
-        <b>{username}</b>: {body}
-      </div>
-      <OverlayTrigger placement="left" overlay={dropdown}>
-        <span className="ml-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-          </svg>
-        </span>
-      </OverlayTrigger>
+    <div className={"d-flex justify-content-between align-items-center text-break message " + (isEditing ? 'editing' : '')}>
+      {isEditing ?
+        (<>
+          <Form onSubmit={f.handleSubmit}>
+            <Form.Group className="mb-3" controlId="channelName">
+              <Form.Label className="visually-hidden">Новое сообщение</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Измененное сообщние"
+                value={f.values.editedMessage}
+                onChange={f.handleChange}
+                name="editedMessage"
+              />
+            </Form.Group>
+            <Button variant="secondary" onClick={() => setIsEditing(false)}>
+              Отменить
+            </Button>
+            <Button variant="primary" onClick={f.handleSubmit}>
+              Отправить
+            </Button>
+          </Form>
+        </>)
+        :
+        (<>
+          <div>
+            <b>{username}</b>: {body}
+          </div>
+          <div className='messageOptionsHandler'>
+            <BsPencilFill
+              size={18}
+              id='editMessageIcon'
+              className='messageOption'
+              onClick={() => setIsEditing(true)}
+            >
+            </BsPencilFill>
+            <BsTrash2Fill
+              size={18}
+              id='deleteMessageIcon'
+              className='messageOption'
+              onClick={() => setShowModal(true)}>
+            </BsTrash2Fill>
+          </div>
+        </>)
+      }
+
+      {
+        <MessageRemoveModal
+          removeMessageHandler={removeMessageHandler(id)}
+          showModal={showModal}
+          handleCloseModal={handleCloseModal}
+          token={currentUser.token}
+          dispatch={dispatch}
+        />
+      }
     </div>
   );
 };

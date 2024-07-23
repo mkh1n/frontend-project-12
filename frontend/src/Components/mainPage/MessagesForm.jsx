@@ -1,34 +1,30 @@
 import { BsSend } from 'react-icons/bs';
 import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
-
-import { addMessage } from '../../slices/messagesSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../slices/authSlice';
 import { selectCurrentChannelId } from '../../slices/channelsSlice';
 import { useFormik } from 'formik';
 
 import axios from 'axios';
 import routes from '../../routes';
+import { useState } from 'react';
 
-const postMessage = async (token, dispatch, newMessage) => {
+const postMessage = async (token, newMessage) => {
   const res = await axios.post(routes.messagesPath(), newMessage, {
     headers: {
       Authorization: `Bearer ${token}`,
     }
   });
-  console.log(res.data)
-  dispatch(addMessage(res.data))
   return res.data
 };
+const editMessageHandler = (token, id) => {
 
-
+}
 export default () => {
   const currentUser = useSelector(selectCurrentUser);
   const currentChannelId = useSelector(selectCurrentChannelId);
-
-  const dispatch = useDispatch();
-
+  // const [isEditing, setIsEditing] = useState(false)
   const f = useFormik({
     onSubmit: values => {
       const newMessage = {
@@ -37,14 +33,15 @@ export default () => {
         username: currentUser.name,
       }
       values.messageText = ''
-      postMessage(currentUser.token, dispatch, newMessage)
+      postMessage(currentUser.token, newMessage)
     },
     initialValues: {
       messageText: "",
     },
   });
+
   return (<Form onSubmit={f.handleSubmit} id="sendForm" className="py-1 border rounded-2">
-   <Form.Control 
+    <Form.Control
       name="messageText"
       aria-label="Новое сообщение"
       placeholder="Введите сообщение..."
@@ -55,13 +52,13 @@ export default () => {
       onBlur={f.handleBlur}
       onChange={f.handleChange}
     />
-    <Button 
-      id="sendButton" 
-      type="submit" 
+    <Button
+      id="sendButton"
+      type="submit"
       className="btn btn-group-vertical"
       disabled={f.values.messageText.length === 0}
-      >
-      <BsSend size={20} id="sendLogo"/>
+    >
+      <BsSend size={20} id="sendLogo" />
       <span className="visually-hidden">Отправить</span>
     </Button>
   </Form>)
