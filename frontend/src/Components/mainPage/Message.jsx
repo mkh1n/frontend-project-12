@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { Form, Modal, Button } from 'react-bootstrap';
+import { Form, Modal, Button, Dropdown } from 'react-bootstrap';
 import routes from '../../routes';
 import { BsPencilFill, BsTrash2Fill } from 'react-icons/bs';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../slices/authSlice';
 import { useFormik } from 'formik';
-import { editMessage, removeMessage } from '../../slices/messagesSlice';
 
 
 const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, token }) => {
-
   const handleSubmit = async () => {
     removeMessageHandler(token)
     handleCloseModal();
@@ -38,8 +36,11 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
 
 export default ({ username, body, id }) => {
   const currentUser = useSelector(selectCurrentUser);
+  const isMessageMine = username == currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  var date = new Date();
+  var formattedTime = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
   const dispatch = useDispatch();
 
@@ -75,13 +76,15 @@ export default ({ username, body, id }) => {
     },
   });
 
-
+  console.log(isMessageMine)
   return (
-    <div className={"d-flex justify-content-between align-items-center text-break message " + (isEditing ? 'editing' : '')}>
+    <div className={"d-flex justify-content-between align-items-end text-break message"
+      + (isEditing ? ' editing' : '')
+      + (isMessageMine ? ' fromMe' : '')}>
       {isEditing ?
         (<>
           <Form onSubmit={f.handleSubmit}>
-            <Form.Group className="mb-3" controlId="channelName">
+            <Form.Group controlId="channelName">
               <Form.Label className="visually-hidden">Новое сообщение</Form.Label>
               <Form.Control
                 type="text"
@@ -94,30 +97,38 @@ export default ({ username, body, id }) => {
             <Button variant="secondary" onClick={() => setIsEditing(false)}>
               Отменить
             </Button>
-            <Button variant="primary" onClick={f.handleSubmit}>
+            <Button 
+              variant="primary" 
+              onClick={f.handleSubmit}
+              disabled={f.values.editedMessage.length === 0}>
               Отправить
             </Button>
           </Form>
         </>)
         :
         (<>
-          <div>
-            <b>{username}</b>: {body}
+          <div className="usernameBlock">
+            {isMessageMine ? 'Ваше' : username}
           </div>
-          <div className='messageOptionsHandler'>
+          <div className='innerMessage'>
+            {body}
+          </div>
+          <div className='messageTime'>
+            {formattedTime}
+          </div>
+          <div className={"messageOptionsHandler" + (isMessageMine ? ' leftOptions' : ' rightOptions')}>
             <BsPencilFill
               size={18}
               id='editMessageIcon'
               className='messageOption'
               onClick={() => setIsEditing(true)}
-            >
-            </BsPencilFill>
+            />
             <BsTrash2Fill
               size={18}
               id='deleteMessageIcon'
               className='messageOption'
-              onClick={() => setShowModal(true)}>
-            </BsTrash2Fill>
+              onClick={() => setShowModal(true)}
+            />
           </div>
         </>)
       }

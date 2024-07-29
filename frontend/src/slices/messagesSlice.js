@@ -13,8 +13,8 @@ const slice = createSlice({
       state.push(payload);
     },
     removeMessage: (state, {payload}) => {
-      console.log(payload)
-      return state.filter((message) => message.id !== payload);
+      console.log('deleted message with id ', payload.id)
+      return state.filter((message) => message.id !== payload.id);
     },
     editMessage: (state, {payload}) => {
       return state.map((message) => message.id == payload.id ? payload : message);

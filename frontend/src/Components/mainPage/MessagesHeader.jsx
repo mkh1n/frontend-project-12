@@ -10,7 +10,7 @@ export default () => {
   const currentChennel = channelsList.find((c) => c.id == currentChennelId);
   const currentChannelMessages = messages.filter((message) => message.channelId == currentChennelId);
 
-  return (<div className="bg-light mb-4 p-3 shadow-sm small">
+  return (<div className="bg-light p-3 shadow-sm small">
     <p className="m-0"><b># {currentChennel.name}</b></p>
     <span className="text-muted">{currentChannelMessages.length} сообщений</span>
   </div>)

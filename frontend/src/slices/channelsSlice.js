@@ -19,7 +19,8 @@ const slice = createSlice({
       if (payload.id == state.currentChannelId){
         state.currentChannelId = 1;
       }
-      state.channelsList.splice(state.channelsList.findIndex((channel) => channel.id === payload), 1);
+      console.log('deleted channel with id ', payload.id)
+      state.channelsList.splice(state.channelsList.findIndex((channel) => channel.id === payload.id), 1);
     },
     renameChannel: (state, {payload}) => {  
       state.channelsList = state.channelsList.map((channel) => channel.id == payload.id ? payload : channel)

@@ -1,19 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Nav, Button, Col, Modal, Form, Dropdown } from "react-bootstrap";
 import { BsPlus } from "react-icons/bs";
-import { selectChannels, selectCurrentChannelId, setCurrentChannelId } from "../../slices/channelsSlice";
+import { selectChannels, selectCurrentChannelId, setCurrentChannelId} from "../../slices/channelsSlice";
 import axios from "axios";
 import routes from "../../routes";
 import { useFormik } from "formik";
-import { act, useState } from "react";
+import * as Yup from 'yup';
+import { useEffect, useRef, useState } from "react";
 import { selectCurrentUser } from "../../slices/authSlice";
+import { selectMessages } from "../../slices/messagesSlice";
 
 const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal }) => {
   return (
     <Nav.Item className="w-100 position-relative d-flex">
       <Button
         type="button"
-        className="w-100 rounded-0 text-start btn"
+        className="w-100 text-start btn channelName"
         variant={variant}
         id={id}
         onClick={handleClick}
@@ -34,18 +36,38 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal })
   )
 }
 
-const ChannelModal = ({ action, showModal, handleCloseModal, token }) => {
+const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, token }) => {
+  const [loading, setLoading] = useState(false);
+  const modalRef = useRef(null);
+  console.log(channelsNames)
+  const validationSchema = Yup.object().shape({
+    channelName: action.name === 'remove' ? Yup.string() : Yup.string()
+      .min(3, 'Название должно содержать не менее 3 символов')
+      .max(20, 'Название должно содержать не более 20 символов')
+      .notOneOf(channelsNames, 'Название должно быть уникальным')
+      .required('Название не может быть пустым'),
+  });
 
   const f = useFormik({
     onSubmit: values => {
-      action.name == 'remove' ? action.handler(token) : action.handler(token,values.channelName);
+      setLoading(true);
+      console.log(action.name == 'remove' ? action.handler(token) : action.handler(token, values.channelName))
       handleCloseModal();
       values.channelName = '';
+      setLoading(false);
+
     },
     initialValues: {
       channelName: '',
     },
+    validationSchema
   });
+
+  useEffect(()=>{
+    setTimeout(() => {
+      modalRef.current ? modalRef.current.focus() : modalRef.current;
+    }, 1)
+  },[]);
 
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
@@ -57,46 +79,44 @@ const ChannelModal = ({ action, showModal, handleCloseModal, token }) => {
           <p>Вы уверены, что хотите удалить этот канал?</p>)
           : (
             <Form onSubmit={f.handleSubmit}>
-              <Form.Group className="mb-3" controlId="channelName">
+              <Form.Group controlId="channelName" hasValidation>
                 <Form.Label className="visually-hidden">Название канала</Form.Label>
-                <Form.Control type="text" placeholder="Введите название канала" value={f.values.channelName} onChange={f.handleChange} />
+                <Form.Control
+                  type="text"
+                  placeholder="Введите название канала"
+                  value={f.values.channelName}
+                  onChange={f.handleChange}
+                  ref={modalRef}
+                  isInvalid={!!f.errors.channelName}
+                  />
+                <Form.Control.Feedback type="invalid">
+                {f.errors.channelName ? f.errors.channelName : ""}
+                </Form.Control.Feedback>
               </Form.Group>
-
             </Form>)
         }
       </Modal.Body>
 
       <Modal.Footer>
-        {action.name === 'remove' ?
-          (<>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Отменить
-            </Button>
-            <Button variant="danger" onClick={f.handleSubmit}>
-              Удалить
-            </Button>
-          </>)
-          :
-          (<>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Отменить
-            </Button>
-            <Button variant="primary" onClick={f.handleSubmit}>
-              Отправить
-            </Button>
-          </>)
-        }
+        <Button variant="secondary" onClick={handleCloseModal}>
+          Отменить
+        </Button>
+        <Button variant={action.name === 'remove' ? "danger" : 'primary'} onClick={f.handleSubmit} disabled={loading}>
+          {action.name === 'remove' ? "Удалить" : "Отправить"}
+        </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
 export default () => {
+  const messages = useSelector(selectMessages);
   const channels = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
+  const currentChannelMessagesIds = messages.filter((m)=>m.channelId == currentChennelId).map((m)=>m.id)
   const currentUser = useSelector(selectCurrentUser);
-    const [showModal, setShowModal] = useState(false);
-    const [modalAction, setModalAction] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalAction, setModalAction] = useState(null);
   const dispatch = useDispatch();
 
   const handleOpenModal = (name, channelId) => {
@@ -151,7 +171,7 @@ export default () => {
         Authorization: `Bearer ${token}`,
       }
     });
-    console.log(name, res.data)
+    dispatch(setCurrentChannelId(res.data.id));
     return res.data
   };
 
@@ -161,20 +181,24 @@ export default () => {
         Authorization: `Bearer ${token}`,
       }
     });
-    console.log(name, res.data)
     return res.data
   };
 
   const removeChannelHandler = (channelId) => async (token) => {
-    if (channelId == currentChennelId){
-      dispatch(setCurrentChannelId(1))
-    }
     const res = await axios.delete(routes.channelPath(channelId), {
       headers: {
         Authorization: `Bearer ${token}`,
       }
     });
-    return res.data
+
+    currentChannelMessagesIds.map(async (messageId)=>{
+      console.log(messageId)
+      await axios.delete(routes.messagePath(messageId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+    });
   };
 
   return (
@@ -194,8 +218,8 @@ export default () => {
           action={modalAction}
           showModal={showModal}
           handleCloseModal={handleCloseModal}
+          channelsNames={channels.map((c => c.name))}
           token={currentUser.token}
-          dispatch={dispatch}
         />
       )}
     </Col>

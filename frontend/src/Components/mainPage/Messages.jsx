@@ -10,30 +10,39 @@ import { selectCurrentChannelId } from "../../slices/channelsSlice";
 export default () => {
   const messages = useSelector(selectMessages);
   const currentChannelId = useSelector(selectCurrentChannelId);
-  const messagesEndRef = useRef(null);
+  const bottomRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({behavior: 'smooth'});
   }, [messages]);
+  
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({behavior: 'smooth'});
+  }, []);
 
-  const messagesList = messages
-    .filter((m) => m.channelId == currentChannelId)
-    .map((message) =>
-      <Message
-        username={message.username}
-        body={message.body}
-        id={message.id}
-        key={message.id}>
-      </Message>);
+  const currentChannelMessages = messages
+  .filter((m) => m.channelId == currentChannelId);
+
+  const messagesList = currentChannelMessages
+    .map((message) =>{
+      return <Message
+      username={message.username}
+      body={message.body}
+      id={message.id}
+      key={message.id}>
+    </Message>
+    }
+      );
 
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
         <MessagesHeader></MessagesHeader>
-        <div id="messages-box" ref={messagesEndRef} className="chat-messages overflow-auto">
+        <div id="messages-box"  className="chat-messages overflow-auto h-100">
           {messagesList}
+          <div ref={bottomRef}></div>
         </div>
-        <div className="mt-auto px-5 py-3">
+        <div className="mt-auto px-5 pb-3">
           <MessagesForm></MessagesForm>
         </div>
       </div>
