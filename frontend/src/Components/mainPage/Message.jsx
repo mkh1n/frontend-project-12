@@ -15,7 +15,7 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
   }
 
   return (
-    <Modal show={showModal} onHide={handleCloseModal}>
+    <Modal show={showModal} onHide={handleCloseModal} centered>
       <Modal.Header closeButton>
         <Modal.Title>Удалить сообщение</Modal.Title>
       </Modal.Header>
@@ -75,8 +75,6 @@ export default ({ username, body, id }) => {
       editedMessage: body,
     },
   });
-
-  console.log(isMessageMine)
   return (
     <div className={"d-flex justify-content-between align-items-end text-break message"
       + (isEditing ? ' editing' : '')
@@ -89,6 +87,7 @@ export default ({ username, body, id }) => {
               <Form.Control
                 type="text"
                 placeholder="Измененное сообщние"
+                className='mb-2'
                 value={f.values.editedMessage}
                 onChange={f.handleChange}
                 name="editedMessage"

@@ -12,15 +12,19 @@ const slice = createSlice({
   name: 'auth',
   initialState: getStateFromLocalStorage(),
   reducers: {
-    setCurrentUser: (state, {payload: { name, token },}) => {
-      state.name = name
-      state.token = token
+    login: (state, {payload: { name, token },}) => {
+      state.name = name;
+      state.token = token;
       return state;
     },
+    logout: (state, action) => {
+      localStorage.clear();
+      return {}
+    }
   },
 })
 
-export const { setCurrentUser } = slice.actions
+export const { login, logout } = slice.actions
 
 export default slice.reducer
 

@@ -5,7 +5,7 @@ import messagesReducer from './slices/messagesSlice';
 
 const saveAuthToLocalStorageMiddleware = (store) => (next) => (action) => {
   const result = next(action);
-  if (action.type === 'auth/setCurrentUser') {
+  if (action.type === 'auth/login') {
     const authState = store.getState().auth;
     localStorage.setItem('user', JSON.stringify(authState));
   }

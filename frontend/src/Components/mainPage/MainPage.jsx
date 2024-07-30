@@ -1,20 +1,18 @@
-import MainContainer from "../MainContainer";
-import { Container, Row, Spinner } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setChannelsList } from "../../slices/channelsSlice";
 import { selectCurrentUser } from "../../slices/authSlice";
 import { setMessages } from "../../slices/messagesSlice";
 import subscribeToSocketEvents from "../../socket";
 import axios from "axios";
 import routes from "../../routes";
+import MainContainer from "../MainContainer";
+import { Container, Row, Spinner } from 'react-bootstrap';
 import Channels from "./Channels";
 import Messages from "./Messages";
 
 const fetchChannels = async (token, dispatch) => {
-  console.log(token)
   const res = await axios.get(routes.channelsPath(), {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -25,7 +23,6 @@ const fetchChannels = async (token, dispatch) => {
 };
 
 const fetchMessages = async (token, dispatch) => {
-  console.log(token)
   const res = await axios.get(routes.messagesPath(), {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -37,24 +34,25 @@ const fetchMessages = async (token, dispatch) => {
 
 export default () => {
   const [loading, setLoading] = useState(true);
-
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(async () => {
-    setLoading(true)
-    const userString = localStorage.getItem("user");
-    if (!userString) {
-      navigate("login");
-    } else {
-      await fetchChannels(currentUser.token, dispatch);
-      await fetchMessages(currentUser.token, dispatch);
-      subscribeToSocketEvents();
-      setLoading(false)
+  useEffect(() => {
+    const loadPageData = async () => {
+      setLoading(true)
+      const userString = localStorage.getItem("user");
+      if (!userString) {
+        navigate("login");
+      } else {
+        await fetchChannels(currentUser.token, dispatch);
+        await fetchMessages(currentUser.token, dispatch);
+        subscribeToSocketEvents();
+        setLoading(false)
+      }
     }
-  }, [currentUser, dispatch]);
-
+    loadPageData();
+  }, [currentUser, dispatch, navigate]);
 
   return (
     <MainContainer>

@@ -22,7 +22,8 @@ export default () => {
 
   const currentChannelMessages = messages
   .filter((m) => m.channelId == currentChannelId);
-
+  console.log(currentChannelMessages);
+  
   const messagesList = currentChannelMessages
     .map((message) =>{
       return <Message

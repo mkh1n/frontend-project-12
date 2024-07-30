@@ -6,12 +6,12 @@ import routes from '../routes';
 import { useFormik } from 'formik';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux'
-import { setCurrentUser } from '../slices/authSlice';
+import { login } from '../slices/authSlice';
 
 const sendAuthRequest = async (dispatch, loginValues) => {
   const res = await axios.post(routes.loginPath(), loginValues);
   const { token, username } = res.data;
-  dispatch(setCurrentUser({ name: username, token }))
+  dispatch(login({ name: username, token }))
 } 
 export default () => {
   const dispatch = useDispatch()
@@ -26,6 +26,7 @@ export default () => {
     onSubmit: async (values) => {
       try {
         await sendAuthRequest(dispatch, values)
+        console.log('Аутентификация успешна');
         navigate("/");
       } catch (err) {
         f.setSubmitting(false);
@@ -40,12 +41,12 @@ export default () => {
 
   return (
     <MainContainer>
-      <Row className="justify-content-center align-content-center h-100">
+      <Row className="justify-content-center align-content-center h-100 w-100">
         <Col xs={12} md={8} xxl={6}>
           <Card className="shadow-sm">
             <Card.Body className='row p-5'>
               <Col xs={12} md={6} className="d-flex align-items-center justify-content-center">
-                <img src="https://www.ukpropertyaccountants.co.uk/wp-content/uploads/2023/06/10312222_18208786-min-scaled.jpg" alt="Войти" className="rounded-circle mb-4" style={{ width: "200px" }} />
+                <img src="https://www.ukpropertyaccountants.co.uk/wp-content/uploads/2023/06/10312222_18208786-min-scaled.jpg" alt="Войти" className="rounded-circle mb-4" style={{ width: "300px" }} />
               </Col>
               <Col xs={12} md={6}>
                 <Form onSubmit={f.handleSubmit}>

@@ -39,7 +39,6 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal })
 const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, token }) => {
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
-  console.log(channelsNames)
   const validationSchema = Yup.object().shape({
     channelName: action.name === 'remove' ? Yup.string() : Yup.string()
       .min(3, 'Название должно содержать не менее 3 символов')
@@ -55,7 +54,6 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, toke
       handleCloseModal();
       values.channelName = '';
       setLoading(false);
-
     },
     initialValues: {
       channelName: '',
@@ -70,7 +68,7 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, toke
   },[]);
 
   return (
-    <Modal show={showModal} onHide={handleCloseModal}>
+    <Modal show={showModal} onHide={handleCloseModal} centered>
       <Modal.Header closeButton>
         <Modal.Title>{action.description}</Modal.Title>
       </Modal.Header>
@@ -192,7 +190,6 @@ export default () => {
     });
 
     currentChannelMessagesIds.map(async (messageId)=>{
-      console.log(messageId)
       await axios.delete(routes.messagePath(messageId), {
         headers: {
           Authorization: `Bearer ${token}`,
