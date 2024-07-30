@@ -6,9 +6,15 @@ import { store } from './store';
 let socket;
 let isSubscribed = false;
 
+const getSocketUrl = () => {
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host;
+  return `${protocol}//${host}`;
+};
+
 const subscribeToSocketEvents = () => {
   if (!isSubscribed) {
-    socket = io('http://localhost:5001');
+    socket = io(getSocketUrl());
 
     socket.on('connect', () => {
       console.log('Socket connected');
