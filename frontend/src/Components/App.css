@@ -85,7 +85,7 @@ nav {
   background-color: #5b6166 !important;
 }
 
-.channelName:hover + .dropdown,
+.channelName + .dropdown:hover,
 .channelName.btn-secondary + .dropdown,
 .dropdown:hover  {
   display: unset !important;

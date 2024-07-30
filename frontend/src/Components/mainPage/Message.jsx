@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Modal, Button, Dropdown } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import routes from '../../routes';
 import { BsPencilFill, BsTrash2Fill } from 'react-icons/bs';
 import axios from 'axios';
@@ -7,10 +7,11 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../slices/authSlice';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, t, token }) => {
   const handleSubmit = async () => {
-    removeMessageHandler(token)
+    removeMessageHandler(token);
     handleCloseModal();
   }
 
@@ -40,6 +41,11 @@ export default ({ username, body, id }) => {
   const isMessageMine = username == currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const messageRemovedNotify = () => toast.success(t('messageRemoved'));
+  const messageEditedNotify = () => toast.success(t('messageEdited'));
+  const networkErrorNotify = () => toast.error(t('networkError'));
+
   var date = new Date();
   var formattedTime = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
@@ -48,27 +54,39 @@ export default ({ username, body, id }) => {
   };
 
   const editMessageHandler = async (id, token, body) => {
-    const res = await axios.patch(routes.messagePath(id), { body }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
-    return res.data
+    try {
+      const res = await axios.patch(routes.messagePath(id), { body }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      messageEditedNotify();
+      return res.data;
+    } catch (error) {
+      networkErrorNotify();
+      throw error;
+    }
   };
 
   const removeMessageHandler = (id) => async (token) => {
-    const res = await axios.delete(routes.messagePath(id), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data
-
+    try {
+      const res = await axios.delete(routes.messagePath(id), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      messageRemovedNotify();
+      return res.data;
+    } catch (error) {
+      networkErrorNotify();
+      throw error;
+    }
   };
+
   const f = useFormik({
     onSubmit: values => {
-      editMessageHandler(id, currentUser.token, values.editedMessage)
-      setIsEditing(false)
+      editMessageHandler(id, currentUser.token, values.editedMessage);
+      setIsEditing(false);
     },
     initialValues: {
       editedMessage: body,
@@ -95,8 +113,8 @@ export default ({ username, body, id }) => {
             <Button variant="secondary" onClick={() => setIsEditing(false)}>
               {t('cancel')}
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={f.handleSubmit}
               disabled={f.values.editedMessage.length === 0}>
               {t('send')}

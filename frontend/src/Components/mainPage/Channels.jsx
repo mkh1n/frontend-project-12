@@ -10,7 +10,8 @@ import { useEffect, useRef, useState } from "react";
 import { selectCurrentUser } from "../../slices/authSlice";
 import { selectMessages } from "../../slices/messagesSlice";
 import { useTranslation } from 'react-i18next';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t }) => {
   return (
@@ -115,6 +116,12 @@ export default () => {
   const currentChennelId = useSelector(selectCurrentChannelId);
   const currentChannelMessagesIds = messages.filter((m) => m.channelId == currentChennelId).map((m) => m.id)
   const currentUser = useSelector(selectCurrentUser);
+
+  const channelCreatedNotify = () => toast.success(t('channelCreated'));
+  const channelRemovedNotify = () => toast.success(t('channelRemoved'));
+  const channelRenamedNotify = () => toast.success(t('channelRenamed'));
+  const networkErrorNotify = () => toast.error(t('networkError'));
+
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
   const { t } = useTranslation();
@@ -168,38 +175,54 @@ export default () => {
   );
 
   const createChannelHandler = async (token, name) => {
-    const res = await axios.post(routes.channelsPath(), { name }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
-    dispatch(setCurrentChannelId(res.data.id));
-    return res.data
-  };
-
-  const renameChannelHandler = (channelId) => async (token, name) => {
-    const res = await axios.patch(routes.channelPath(channelId), { name }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
-    return res.data
-  };
-
-  const removeChannelHandler = (channelId) => async (token) => {
-    await axios.delete(routes.channelPath(channelId), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
-
-    currentChannelMessagesIds.map(async (messageId) => {
-      await axios.delete(routes.messagePath(messageId), {
+    try{
+      const res = await axios.post(routes.channelsPath(), { name }, {
         headers: {
           Authorization: `Bearer ${token}`,
         }
       });
-    });
+      channelCreatedNotify()
+      return res.data
+    } catch (error) {
+      networkErrorNotify();
+      throw error;
+    }
+  };
+
+  const renameChannelHandler = (channelId) => async (token, name) => {
+    try {
+      const res = await axios.patch(routes.channelPath(channelId), { name }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      channelRenamedNotify();
+      return res.data
+    } catch (error) {
+      networkErrorNotify();
+      throw error;
+    }
+  };
+
+  const removeChannelHandler = (channelId) => async (token) => {
+    try{
+      await axios.delete(routes.channelPath(channelId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      channelRemovedNotify()
+      currentChannelMessagesIds.map(async (messageId) => {
+        await axios.delete(routes.messagePath(messageId), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+      });
+    } catch (error){
+      networkErrorNotify();
+      throw error;
+    }
   };
 
   return (
