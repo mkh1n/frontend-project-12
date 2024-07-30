@@ -10,6 +10,7 @@ const slice = createSlice({
       state.splice(0, state.length, ...payload);
     },
     addMessage: (state, {payload}) => {
+      console.log('addmessage')
       state.push(payload);
     },
     removeMessage: (state, {payload}) => {

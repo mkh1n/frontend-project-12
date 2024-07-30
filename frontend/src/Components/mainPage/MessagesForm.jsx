@@ -6,7 +6,7 @@ import { selectCurrentUser } from '../../slices/authSlice';
 import { selectCurrentChannelId } from '../../slices/channelsSlice';
 import Picker from "emoji-picker-react";
 import { useFormik } from 'formik';
-
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import routes from '../../routes';
 import { useState, useEffect } from 'react';
@@ -21,6 +21,7 @@ const postMessage = async (token, newMessage) => {
 };
 
 export default () => {
+  const { t, i18n } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const currentChannelId = useSelector(selectCurrentChannelId);
   const [isEmojiPickerOpen, setEmojiPickerOpen] = useState(false);
@@ -79,8 +80,8 @@ export default () => {
       </div>
       <Form.Control
         name="messageText"
-        aria-label="Новое сообщение"
-        placeholder="Введите сообщение..."
+        aria-label={t('newMessage')}
+        placeholder={t('enterMessage')}
         className="border-0 p-0 ps-2"
         id="sendInput"
         required
@@ -95,7 +96,7 @@ export default () => {
         disabled={f.values.messageText.length === 0}
       >
         <BsSend size={20} id="sendLogo" />
-        <span className="visually-hidden">Отправить</span>
+        <span className="visually-hidden">{t('send')}</span>
       </Button>
     </Form>
   );

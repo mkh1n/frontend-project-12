@@ -3,12 +3,12 @@ import { Form, Modal, Button, Dropdown } from 'react-bootstrap';
 import routes from '../../routes';
 import { BsPencilFill, BsTrash2Fill } from 'react-icons/bs';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../slices/authSlice';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 
-
-const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, token }) => {
+const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, t, token }) => {
   const handleSubmit = async () => {
     removeMessageHandler(token)
     handleCloseModal();
@@ -17,17 +17,17 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
   return (
     <Modal show={showModal} onHide={handleCloseModal} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Удалить сообщение</Modal.Title>
+        <Modal.Title>{t('removeMessage')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Вы действительно хотите <b>удалить</b> сообщение?
+        {t('messageRemoveConfirmation')}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>
-          Отменить
+          {t('cancel')}
         </Button>
         <Button variant="danger" onClick={handleSubmit}>
-          Удалить
+          {t('remove')}
         </Button>
       </Modal.Footer>
     </Modal>
@@ -35,14 +35,13 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
 };
 
 export default ({ username, body, id }) => {
+  const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const isMessageMine = username == currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   var date = new Date();
   var formattedTime = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-
-  const dispatch = useDispatch();
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -83,10 +82,10 @@ export default ({ username, body, id }) => {
         (<>
           <Form onSubmit={f.handleSubmit}>
             <Form.Group controlId="channelName">
-              <Form.Label className="visually-hidden">Новое сообщение</Form.Label>
+              <Form.Label className="visually-hidden">{t('newMessage')}</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Измененное сообщние"
+                placeholder={t('editedMessage')}
                 className='mb-2'
                 value={f.values.editedMessage}
                 onChange={f.handleChange}
@@ -94,20 +93,20 @@ export default ({ username, body, id }) => {
               />
             </Form.Group>
             <Button variant="secondary" onClick={() => setIsEditing(false)}>
-              Отменить
+              {t('cancel')}
             </Button>
             <Button 
               variant="primary" 
               onClick={f.handleSubmit}
               disabled={f.values.editedMessage.length === 0}>
-              Отправить
+              {t('send')}
             </Button>
           </Form>
         </>)
         :
         (<>
           <div className="usernameBlock">
-            {isMessageMine ? 'Ваше' : username}
+            {isMessageMine ? t('your') : username}
           </div>
           <div className='innerMessage'>
             {body}
@@ -137,8 +136,8 @@ export default ({ username, body, id }) => {
           removeMessageHandler={removeMessageHandler(id)}
           showModal={showModal}
           handleCloseModal={handleCloseModal}
+          t={t}
           token={currentUser.token}
-          dispatch={dispatch}
         />
       }
     </div>

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Nav, Button, Col, Modal, Form, Dropdown } from "react-bootstrap";
 import { BsPlus } from "react-icons/bs";
-import { selectChannels, selectCurrentChannelId, setCurrentChannelId} from "../../slices/channelsSlice";
+import { selectChannels, selectCurrentChannelId, setCurrentChannelId } from "../../slices/channelsSlice";
 import axios from "axios";
 import routes from "../../routes";
 import { useFormik } from "formik";
@@ -9,8 +9,10 @@ import * as Yup from 'yup';
 import { useEffect, useRef, useState } from "react";
 import { selectCurrentUser } from "../../slices/authSlice";
 import { selectMessages } from "../../slices/messagesSlice";
+import { useTranslation } from 'react-i18next';
 
-const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal }) => {
+
+const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t }) => {
   return (
     <Nav.Item className="w-100 position-relative d-flex">
       <Button
@@ -36,15 +38,15 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal })
   )
 }
 
-const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, token }) => {
+const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, token }) => {
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
   const validationSchema = Yup.object().shape({
     channelName: action.name === 'remove' ? Yup.string() : Yup.string()
-      .min(3, 'Название должно содержать не менее 3 символов')
-      .max(20, 'Название должно содержать не более 20 символов')
-      .notOneOf(channelsNames, 'Название должно быть уникальным')
-      .required('Название не может быть пустым'),
+      .min(3, t('minChannelNameError'))
+      .max(20, t('maxChannelNameError'))
+      .notOneOf(channelsNames, t('uniqueChannelNameError'))
+      .required(t('emptyChannelNameError')),
   });
 
   const f = useFormik({
@@ -61,11 +63,11 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, toke
     validationSchema
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     setTimeout(() => {
       modalRef.current ? modalRef.current.focus() : modalRef.current;
     }, 1)
-  },[]);
+  }, []);
 
   return (
     <Modal show={showModal} onHide={handleCloseModal} centered>
@@ -74,21 +76,21 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, toke
       </Modal.Header>
       <Modal.Body>
         {action.name == 'remove' ? (
-          <p>Вы уверены, что хотите удалить этот канал?</p>)
+          t('channelRemoveConfirmation'))
           : (
             <Form onSubmit={f.handleSubmit}>
               <Form.Group controlId="channelName" hasValidation>
-                <Form.Label className="visually-hidden">Название канала</Form.Label>
+                <Form.Label className="visually-hidden">{t('channelCreateHeader')}</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Введите название канала"
+                  placeholder={t('emptyChannelNameError')}
                   value={f.values.channelName}
                   onChange={f.handleChange}
                   ref={modalRef}
                   isInvalid={!!f.errors.channelName}
-                  />
+                />
                 <Form.Control.Feedback type="invalid">
-                {f.errors.channelName ? f.errors.channelName : ""}
+                  {f.errors.channelName ? f.errors.channelName : ""}
                 </Form.Control.Feedback>
               </Form.Group>
             </Form>)
@@ -97,10 +99,10 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, toke
 
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>
-          Отменить
+          {t('cancel')}
         </Button>
         <Button variant={action.name === 'remove' ? "danger" : 'primary'} onClick={f.handleSubmit} disabled={loading}>
-          {action.name === 'remove' ? "Удалить" : "Отправить"}
+          {t(action.name === 'remove' ? 'remove' : 'send')}
         </Button>
       </Modal.Footer>
     </Modal>
@@ -111,10 +113,11 @@ export default () => {
   const messages = useSelector(selectMessages);
   const channels = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
-  const currentChannelMessagesIds = messages.filter((m)=>m.channelId == currentChennelId).map((m)=>m.id)
+  const currentChannelMessagesIds = messages.filter((m) => m.channelId == currentChennelId).map((m) => m.id)
   const currentUser = useSelector(selectCurrentUser);
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const handleOpenModal = (name, channelId) => {
@@ -122,15 +125,15 @@ export default () => {
     let handler;
     switch (name) {
       case 'rename':
-        description = 'Переименование канала';
+        description = t('channelRenameDescription');
         handler = renameChannelHandler(channelId);
         break;
       case 'remove':
-        description = 'Удаление канала';
+        description = t('channelRemoveDescription');
         handler = removeChannelHandler(channelId);
         break;
       case 'create':
-        description = 'Создание канала';
+        description = t('channelCreateDescription');
         handler = createChannelHandler;
         break;
     }
@@ -160,6 +163,7 @@ export default () => {
     removable={channel.removable}
     id={channel.id}
     handleOpenModal={handleOpenModal}
+    t={t}
   />
   );
 
@@ -183,13 +187,13 @@ export default () => {
   };
 
   const removeChannelHandler = (channelId) => async (token) => {
-    const res = await axios.delete(routes.channelPath(channelId), {
+    await axios.delete(routes.channelPath(channelId), {
       headers: {
         Authorization: `Bearer ${token}`,
       }
     });
 
-    currentChannelMessagesIds.map(async (messageId)=>{
+    currentChannelMessagesIds.map(async (messageId) => {
       await axios.delete(routes.messagePath(messageId), {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -201,7 +205,7 @@ export default () => {
   return (
     <Col xs={4} md={2} className="border-end px-0 bg-light d-flex flex-column h-100">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4 align-items-center">
-        <b>Каналы</b>
+        <b>{t('channels')}</b>
         <Button type="button" className="p-0 text-primary" variant="btn-group-vertical" onClick={() => handleOpenModal('create')}>
           <BsPlus size={20} />
           <span className="visually-hidden">+</span>
@@ -216,6 +220,7 @@ export default () => {
           showModal={showModal}
           handleCloseModal={handleCloseModal}
           channelsNames={channels.map((c => c.name))}
+          t={t}
           token={currentUser.token}
         />
       )}
