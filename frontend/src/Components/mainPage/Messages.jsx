@@ -1,52 +1,75 @@
 import MessagesHeader from "./MessagesHeader";
 import MessagesForm from "./MessagesForm";
 import Message from "./Message";
-import { Col } from "react-bootstrap";
+import { BsArrowDownShort } from "react-icons/bs";
+import { Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { selectMessages } from "../../slices/messagesSlice";
 import { selectCurrentChannelId } from "../../slices/channelsSlice";
 
 export default () => {
   const messages = useSelector(selectMessages);
   const currentChannelId = useSelector(selectCurrentChannelId);
+  const container = useRef(null)
   const bottomRef = useRef(null);
+  const scrollBottomRef = useRef(null);
+
+  const currentChannelMessages = messages.filter((m) => m.channelId == currentChannelId);
+
+  const Scroll = () => {
+    const { offsetHeight, scrollHeight, scrollTop } = container.current
+    if (scrollHeight <= scrollTop + offsetHeight + 400) {
+      container.current?.scrollTo(0, scrollHeight);
+    }
+  }
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+  const handleScroll = () => {
+    const { offsetHeight, scrollHeight, scrollTop } = container.current
+    if (scrollHeight <= scrollTop + offsetHeight + 400) {
+      scrollBottomRef.current.style.display = "none";
+    } else {
+      scrollBottomRef.current.style.display = "flex";
+    }
+  }
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({behavior: 'smooth'});
-  }, [messages]);
-  
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({behavior: 'smooth'});
-  }, []);
+    Scroll()
+  }, [currentChannelMessages]);
 
-  const currentChannelMessages = messages
-  .filter((m) => m.channelId == currentChannelId);
-  console.log(currentChannelMessages);
-  
-  const messagesList = currentChannelMessages
-    .map((message) =>{
-      return <Message
+  useEffect(() => {
+      bottomRef.current?.scrollIntoView();
+  }, [currentChannelId]);
+
+  const messagesList = currentChannelMessages.map((message) => (
+    <Message
       username={message.username}
       body={message.body}
       id={message.id}
-      key={message.id}>
-    </Message>
-    }
-      );
+      key={message.id}
+    />
+  ));
 
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
-        <MessagesHeader></MessagesHeader>
-        <div id="messages-box"  className="chat-messages overflow-auto h-100">
+        <MessagesHeader />
+        <div id="messages-box" className="chat-messages overflow-auto h-100 messagesPadding" ref={container} onScroll={handleScroll}>
           {messagesList}
           <div ref={bottomRef}></div>
+          <Button 
+            variant="secondary"
+            className="rounded-5 btn-floating btn-lg" 
+            id="scrollDownButton" 
+            ref={scrollBottomRef}
+            onClick={scrollToBottom}>
+            <BsArrowDownShort/>
+          </Button>
         </div>
-        <div className="mt-auto px-5 pb-3">
-          <MessagesForm></MessagesForm>
-        </div>
+        <MessagesForm />
       </div>
     </Col>
-  )
-}
+  );
+};

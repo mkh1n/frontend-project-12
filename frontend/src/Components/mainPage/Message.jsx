@@ -8,6 +8,7 @@ import { selectCurrentUser } from '../../slices/authSlice';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { Anchorme } from 'react-anchorme'
 
 const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, t, token }) => {
   const handleSubmit = async () => {
@@ -127,7 +128,7 @@ export default ({ username, body, id }) => {
             {isMessageMine ? t('your') : username}
           </div>
           <div className='innerMessage'>
-            {body}
+            <Anchorme  target="_blank" >{body}</Anchorme>
           </div>
           <div className='messageTime'>
             {formattedTime}

@@ -226,7 +226,7 @@ export default () => {
   };
 
   return (
-    <Col xs={4} md={2} className="border-end px-0 bg-light d-flex flex-column h-100">
+    <Col xs={4} md={3} className="border-end px-0 bg-light d-flex flex-column h-100">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4 align-items-center">
         <b>{t('channels')}</b>
         <Button type="button" className="p-0 text-primary" variant="btn-group-vertical" onClick={() => handleOpenModal('create')}>
