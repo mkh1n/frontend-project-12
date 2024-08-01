@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import routes from '../../routes';
 import { useState, useEffect, useRef } from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 
 const postMessage = async (token, newMessage) => {
   const res = await axios.post(routes.messagesPath(), newMessage, {
@@ -30,26 +31,27 @@ export default () => {
 
   const f = useFormik({
     onSubmit: values => {
-      console.log('sending')
-      setIsSending(true);
-      const newMessage = {
-        body: values.messageText,
-        channelId: currentChannelId,
-        username: currentUser.name,
+      if (values.messageText == '') {
+        return
+      } else {
+        setIsSending(true);
+        const newMessage = {
+          body: values.messageText,
+          channelId: currentChannelId,
+          username: currentUser.name,
+        }
+        values.messageText = "";
+        postMessage(currentUser.token, newMessage).then(()=>{
+          setIsSending(false);
+          formRef.current.focus();
+        })
+        
       }
-      setIsSending(true);
-      values.messageText = "";
-      setTimeout(() => {
-        setIsSending(false)
-        console.log('sended') ;
-        formRef.current?.focus();
-        postMessage(currentUser.token, newMessage)}, 100)
     },
     initialValues: {
       messageText: "",
     },
   });
-  const rows = (f.values.messageText.match(/\n/g) || []).length + 1;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -65,7 +67,7 @@ export default () => {
   }, []);
 
   const handleChange = (event) => {
-    if (!isSending){
+    if (!isSending) {
       let value = event.target.value;
       value = value.replace(/^\s+/, '');
       f.setFieldValue('messageText', value);
@@ -73,18 +75,9 @@ export default () => {
       f.setFieldValue('')
     }
   };
-  const autoGrowTextArea = () => {
-    const textarea = formRef.current;
 
-    // Сбрасываем высоту, чтобы правильно измерить scrollHeight
-    textarea.style.height = 'auto';
 
-    // Устанавливаем новую высоту на основе scrollHeight
-    textarea.style.height = textarea.scrollHeight + 'px';
-  }
-  
   const onKeyDown = (event) => {
-    autoGrowTextArea()
     if (event.shiftKey && event.key === 'Enter') {
       event.preventDefault();
       if (f.values.messageText !== '') {
@@ -93,7 +86,7 @@ export default () => {
     } else if (event.key == 'Enter') {
       event.preventDefault();
       f.handleSubmit();
-    } 
+    }
   }
 
   return (
@@ -122,19 +115,19 @@ export default () => {
             />
           )}
         </div>
-        <Form.Control
+        <TextareaAutosize
           name="messageText"
           aria-label={t('newMessage')}
           placeholder={t('enterMessage')}
           className="border-0 rounded-5 p-0 ps-2"
           id="sendInput"
-          as="textarea"
           style={{ resize: 'none' }}
-          rows={rows}
+          rows={1}
           onKeyDown={onKeyDown}
           value={f.values.messageText}
           onBlur={f.handleBlur}
           ref={formRef}
+          autoFocus
           disabled={isSending}
           onChange={handleChange}
         />

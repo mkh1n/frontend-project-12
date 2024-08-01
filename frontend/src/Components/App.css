@@ -23,17 +23,21 @@ nav {
   align-items: center;
   display: flex;
   background-position: top;
-  bottom: 6px;
+  bottom: 7px;
   border-radius: 50px;
 }
 
 #sendInput {
+  width: 100%;
   padding: 10px 50px 10px 50px !important;
+}
+#sendInput:focus{
+  outline: none;
 }
 
 #sendForm {
   position: relative;
-  padding: .25rem !important;
+  padding-bottom: 0px !important;
 }
 
 #sendLogo {
@@ -52,7 +56,7 @@ nav {
   padding: 0;
   position: absolute;
   left: 13px;
-  bottom: 6px;
+  bottom: 7px;
   width: 30px;
   cursor: pointer;
 }
@@ -109,7 +113,7 @@ nav {
 
 #scrollDownButton{
   position: fixed;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   bottom: 87px;
@@ -117,6 +121,7 @@ nav {
   height: 47px;
   width: 47px;
   z-index: 100;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 #scrollDownButton svg{
   width: 25px;
@@ -137,7 +142,7 @@ nav {
   position: relative;
   border-radius: 15px 15px 15px 1px;
   margin-left: 20px;
-  padding: 7px 12px;
+  padding: 5px 11px;
   max-width: 50%;
 }
 
@@ -154,14 +159,14 @@ nav {
   right: 3px;
 }
 .fromMe a {
-  color: #000
+  color: #fff !important;
 }
 .innerMessage {
   display: flex;
   flex-direction: column;
 }
 .innerMessage a {
-  color: #fff;
+  color: #000;
 }
 .usernameBlock {
   position: absolute;

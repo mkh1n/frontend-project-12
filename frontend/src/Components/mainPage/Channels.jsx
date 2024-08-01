@@ -30,8 +30,8 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t
           <Dropdown.Toggle as={Button} variant="link" >
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item onClick={() => handleOpenModal('rename', id)}>Переименовать</Dropdown.Item>
-            <Dropdown.Item onClick={() => handleOpenModal('remove', id)}>Удалить</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleOpenModal('rename', id)}>{t('rename')}</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleOpenModal('remove', id)}>{t('remove')}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       )}

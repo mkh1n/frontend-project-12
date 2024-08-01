@@ -9,6 +9,7 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { Anchorme } from 'react-anchorme'
+import TextareaAutosize from 'react-textarea-autosize';
 
 const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, t, token }) => {
   const handleSubmit = async () => {
@@ -42,6 +43,10 @@ export default ({ username, body, id }) => {
   const isMessageMine = username == currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const lines = body.split('\n').map((line, index) => (
+      <div key={index}><Anchorme target="_blank">{line}</Anchorme></div>
+  ));
 
   const messageRemovedNotify = () => toast.success(t('messageRemoved'));
   const messageEditedNotify = () => toast.success(t('messageEdited'));
@@ -102,7 +107,7 @@ export default ({ username, body, id }) => {
           <Form onSubmit={f.handleSubmit}>
             <Form.Group controlId="channelName">
               <Form.Label className="visually-hidden">{t('newMessage')}</Form.Label>
-              <Form.Control
+              <TextareaAutosize
                 type="text"
                 placeholder={t('editedMessage')}
                 className='mb-2'
@@ -128,7 +133,7 @@ export default ({ username, body, id }) => {
             {isMessageMine ? t('your') : username}
           </div>
           <div className='innerMessage'>
-            <Anchorme  target="_blank" >{body}</Anchorme>
+            {lines}
           </div>
           <div className='messageTime'>
             {formattedTime}

@@ -28,10 +28,10 @@ export default () => {
   }
   const handleScroll = () => {
     const { offsetHeight, scrollHeight, scrollTop } = container.current
-    if (scrollHeight <= scrollTop + offsetHeight + 400) {
+    if (scrollHeight <= scrollTop + offsetHeight + 150) {
       scrollBottomRef.current.style.display = "none";
     } else {
-      scrollBottomRef.current.style.display = "flex";
+     scrollBottomRef.current.style.display = "flex"
     }
   }
 
