@@ -295,7 +295,7 @@ nav {
   }
 
   #scrollDownButton {
-    right: 5%;
+    right: 2%;
   }
   .channelName+.dropdown, .dropdown{
     display: unset !important;
