@@ -32,6 +32,7 @@ nav {
 #sendInput {
   width: 100%;
   padding: 10px 50px 10px 50px !important;
+  max-height: 250px !important;
 }
 
 #sendInput:focus {
@@ -113,7 +114,9 @@ nav {
 #messages-box {
   display: flex;
   position: relative;
-  flex-direction: column;
+  flex-direction: column-reverse;
+  justify-content: end;
+
 }
 
 #scrollDownButton {
@@ -163,7 +166,7 @@ nav {
 
 .fromMe>.usernameBlock {
   left: unset !important;
-  right: 3px;
+  right: 5px;
 }
 
 .fromMe a {
@@ -181,9 +184,9 @@ nav {
 
 .usernameBlock {
   position: absolute;
-  bottom: -18px;
+  top: -18px;
   color: gray;
-  left: 3px;
+  left: 5px;
   font-size: 12px;
 }
 
@@ -247,14 +250,19 @@ nav {
 }
 
 @media screen and (max-width: 650px) {
-
+  #sendInput {
+    max-height: 200px !important;
+  }
   .message {
     max-width: 85%;
     margin: 12px 0;
   }
   .messagesPadding {
     padding: 5px !important;
-}
+  }
+  #sendInputHolder{
+    padding-bottom: 5px !important;
+  }
   #burgerButton {
     display: block;
     transform-origin: 16px 11px;
@@ -276,8 +284,7 @@ nav {
   }
 
   #burgerButton:focus {
-    border: none;
-    box-shadow: rgb(144, 113, 255) 0 0 2px 2px;
+    border: none !important;
     outline: 0;
   }
 
@@ -299,6 +306,8 @@ nav {
   }
   .channelName+.dropdown, .dropdown{
     display: unset !important;
-  
+  }
+  .modal{
+    top: -100px !important;
   }
 }

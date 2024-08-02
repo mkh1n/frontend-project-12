@@ -18,23 +18,27 @@ export default () => {
   const currentChannelMessages = messages.filter((m) => m.channelId == currentChannelId);
 
   const Scroll = () => {
-    const { offsetHeight, scrollHeight, scrollTop } = container.current
-    if (scrollHeight <= scrollTop + offsetHeight + 400) {
-      container.current?.scrollTo(0, scrollHeight);
+    const { offsetHeight, scrollHeight, scrollTop } = container.current;
+    const actualScrollTop = scrollHeight - scrollTop - offsetHeight;
+    if (actualScrollTop <= 400) {
+      container.current?.scrollTo(0, 0);
     }
-  }
+  };
+  
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }
+  };
+  
   const handleScroll = () => {
-    const { offsetHeight, scrollHeight, scrollTop } = container.current
-    if (scrollHeight <= scrollTop + offsetHeight + 150) {
+    const { offsetHeight, scrollHeight, scrollTop } = container.current;
+    const actualScrollTop = scrollHeight - scrollTop - offsetHeight;
+  
+    if (actualScrollTop <= 150) {
       scrollBottomRef.current.style.display = "none";
     } else {
-     scrollBottomRef.current.style.display = "flex"
+      scrollBottomRef.current.style.display = "flex";
     }
-  }
-
+  };
   useEffect(() => {
     Scroll()
   }, [currentChannelMessages]);
@@ -51,6 +55,7 @@ export default () => {
       key={message.id}
     />
   ));
+  messagesList.reverse();
 
   return (
     <Col className="p-0 h-100">
@@ -58,7 +63,10 @@ export default () => {
         <MessagesHeader />
         <div id="messages-box" className="chat-messages overflow-auto h-100 messagesPadding" ref={container} onScroll={handleScroll}>
           {messagesList}
-          <div ref={bottomRef}></div>
+          <div 
+          ref={bottomRef}
+          style={{ position: 'absolute' }}
+          ></div>
           <Button 
             variant="secondary"
             className="rounded-5 btn-floating btn-lg" 

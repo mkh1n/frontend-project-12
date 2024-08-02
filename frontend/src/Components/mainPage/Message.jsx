@@ -130,6 +130,7 @@ export default ({ username, body, id }) => {
                 value={f.values.editedMessage}
                 onChange={f.handleChange}
                 name="editedMessage"
+                style={{ resize: 'none' , borderRadius: "10px", border: "none"}}
               />
             </Form.Group>
             <Button variant="secondary" onClick={() => setIsEditing(false)}>

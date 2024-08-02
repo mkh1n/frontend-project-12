@@ -11,6 +11,7 @@ import axios from 'axios';
 import routes from '../../routes';
 import { useState, useEffect, useRef } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { isSupported, subscribe } from 'on-screen-keyboard-detector';
 
 const postMessage = async (token, newMessage) => {
   const res = await axios.post(routes.messagesPath(), newMessage, {
@@ -28,30 +29,36 @@ export default () => {
   const [isEmojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const formRef = useRef(null);
+  const [isMobileKeybord, setIsMobileKeyboard] = useState(false);
 
   const f = useFormik({
     onSubmit: values => {
-      if (values.messageText == '') {
-        return
+      if (values.messageText === '') {
+        return;
       } else {
         setIsSending(true);
         const newMessage = {
           body: values.messageText,
           channelId: currentChannelId,
           username: currentUser.name,
-        }
+        };
         values.messageText = "";
-        postMessage(currentUser.token, newMessage).then(()=>{
+        postMessage(currentUser.token, newMessage).then(() => {
           setIsSending(false);
           formRef.current.focus();
-        })
-        
+        });
       }
     },
     initialValues: {
       messageText: "",
     },
   });
+
+  useEffect(() => {
+    if (!isSending) {
+      formRef.current?.focus();
+    }
+  }, [isSending]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -72,26 +79,32 @@ export default () => {
       value = value.replace(/^\s+/, '');
       f.setFieldValue('messageText', value);
     } else {
-      f.setFieldValue('')
+      f.setFieldValue('');
+    }
+  };
+  const addNewLine = () => {
+    if (f.values.messageText !== '') {
+      f.setFieldValue('messageText', f.values.messageText + '\n');
+    }
+  }
+  const onKeyDown = (event) => {
+    if (isSupported()) {
+      subscribe(visibility => {
+        setIsMobileKeyboard(visibility === "visible")
+      })
+    }
+
+    if (event.shiftKey && event.key === 'Enter') {
+      event.preventDefault();
+      addNewLine();
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      return isMobileKeybord ? addNewLine() : f.handleSubmit();
     }
   };
 
-
-  const onKeyDown = (event) => {
-    if (event.shiftKey && event.key === 'Enter') {
-      event.preventDefault();
-      if (f.values.messageText !== '') {
-        f.setFieldValue('messageText', f.values.messageText + '\n');
-      }
-    } else if (event.key == 'Enter') {
-      event.preventDefault();
-      f.handleSubmit();
-    }
-  }
-
   return (
-    <div className="mt-auto pb-3 messagesPadding">
-
+    <div className="mt-auto pb-3 messagesPadding" id="sendInputHolder">
       <Form id="sendForm" className="py-1 border rounded-5">
         <div className='emojiHolder'>
           <svg

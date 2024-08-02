@@ -44,19 +44,19 @@ export default () => {
 
 
   useEffect(() => {
-    console.log(isMenuOpen)
-
-    const listener = () => {
-      if (isMenuOpen) {
-        handleMenuClick()
+    const listener = (event) => {
+      console.log('click')
+      console.log(event.target.closest('#channelsHolder'));
+      if (isMenuOpen && !event.target.closest('#channelsHolder')) {
+        dispatch(toggleMenu());
       }
     };
+
     document.addEventListener('mousedown', listener);
     return () => {
       document.removeEventListener('mousedown', listener);
     };
-  }, [mobileMenuRef]);
-
+  }, [isMenuOpen]);
 
   return (
     <Navbar bg="light" data-bs-theme="light">
