@@ -250,9 +250,11 @@ nav {
 
   .message {
     max-width: 90%;
-    margin: 12px 20px;
+    margin: 12px 0;
   }
-
+  .messagesPadding {
+    padding: 5px !important;
+}
   #burgerButton {
     display: block;
     transform-origin: 16px 11px;
