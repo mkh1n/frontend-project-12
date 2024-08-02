@@ -11,9 +11,11 @@ nav {
 #chat {
   height: calc(100% - 50px);
 }
-#headerUsername{
+
+#headerUsername {
   margin-right: 10px;
 }
+
 #sendButton {
   position: absolute;
   right: 7px;
@@ -31,7 +33,8 @@ nav {
   width: 100%;
   padding: 10px 50px 10px 50px !important;
 }
-#sendInput:focus{
+
+#sendInput:focus {
   outline: none;
 }
 
@@ -87,9 +90,11 @@ nav {
   background-color: #5b6166 !important;
 }
 
-.channelName + .dropdown:hover,
-.channelName.btn-secondary + .dropdown,
-.dropdown:hover  {
+.channelName:hover+.dropdown, .dropdown.show{
+  display: unset !important;
+}
+.channelName.btn-secondary+.dropdown,
+.dropdown:hover {
   display: unset !important;
 }
 
@@ -111,7 +116,7 @@ nav {
   flex-direction: column;
 }
 
-#scrollDownButton{
+#scrollDownButton {
   position: fixed;
   display: none;
   align-items: center;
@@ -123,12 +128,14 @@ nav {
   z-index: 100;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
-#scrollDownButton svg{
+
+#scrollDownButton svg {
   width: 25px;
   height: 25px;
   position: absolute;
 }
-.messagesPadding{
+
+.messagesPadding {
   padding: 0 10% !important;
 }
 
@@ -154,20 +161,24 @@ nav {
   margin-right: 20px;
 }
 
-.fromMe > .usernameBlock {
+.fromMe>.usernameBlock {
   left: unset !important;
   right: 3px;
 }
+
 .fromMe a {
   color: #fff !important;
 }
+
 .innerMessage {
   display: flex;
   flex-direction: column;
 }
+
 .innerMessage a {
   color: #000;
 }
+
 .usernameBlock {
   position: absolute;
   bottom: -18px;
@@ -230,4 +241,62 @@ nav {
   transition: 0.2s;
   color: #b3b3b3;
   cursor: pointer;
+}
+#burgerButton {
+  display: none;
+}
+
+@media screen and (max-width: 650px) {
+
+  .message {
+    max-width: 90%;
+    margin: 12px 20px;
+  }
+
+  #burgerButton {
+    display: block;
+    transform-origin: 16px 11px;
+    float: left;
+    margin-right: 29px;
+    outline: 0;
+    border: 0;
+    padding: 12px;
+    background: none;
+  }
+
+  #burgerButton span {
+    background-color: #0d6efd;
+    display: block;
+    height: 4px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+    width: 33px;
+  }
+
+  #burgerButton:focus {
+    border: none;
+    box-shadow: rgb(144, 113, 255) 0 0 2px 2px;
+    outline: 0;
+  }
+
+  #channelsHolder {
+    position: absolute;
+    transform: translateX(-100%);
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    z-index: 100;
+    height: calc(100% - 51px) !important;
+    width: 50% !important;
+  }
+
+  #channelsHolder.open {
+    transform: translateX(0) !important;
+  }
+
+  #scrollDownButton {
+    right: 11.2%;
+  }
+  .channelName+.dropdown, .dropdown{
+    display: unset !important;
+  
+  }
 }

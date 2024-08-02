@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
-import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
+import { addChannel, removeChannel, renameChannel, setCurrentChannelId } from './slices/channelsSlice';
 import { addMessage, editMessage, removeMessage } from './slices/messagesSlice';
+import { toggleMenu } from './slices/mobileMenuSlice';
 import { store } from './store';
 
 let socket;
@@ -27,6 +28,7 @@ const subscribeToSocketEvents = () => {
     socket.on('newMessage', (payload) => {
       console.log('Socket event: newMessage', payload);
       store.dispatch(addMessage(payload));
+      
     });
 
     socket.on('renameMessage', (payload) => {
@@ -42,16 +44,24 @@ const subscribeToSocketEvents = () => {
     socket.on('newChannel', (payload) => {
       console.log('Socket event: newChannel', payload);
       store.dispatch(addChannel(payload));
+      store.dispatch(setCurrentChannelId(payload.id))
+      store.dispatch(toggleMenu())
+
     });
 
     socket.on('removeChannel', (payload) => {
       console.log('Socket event: removeChannel', payload);
       store.dispatch(removeChannel(payload));
+      store.dispatch(toggleMenu())
+
     });
 
     socket.on('renameChannel', (payload) => {
       console.log('Socket event: renameChannel', payload);
       store.dispatch(renameChannel(payload));
+      store.dispatch(setCurrentChannelId(payload.id))
+      store.dispatch(toggleMenu())
+
     });
 
     isSubscribed = true;

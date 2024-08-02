@@ -11,6 +11,22 @@ import { toast } from 'react-toastify';
 import { Anchorme } from 'react-anchorme'
 import TextareaAutosize from 'react-textarea-autosize';
 
+const MessageOtions = ({isMessageMine, setIsEditing, setShowModal}) => {
+  return <div className={"messageOptionsHandler" + (isMessageMine ? ' leftOptions' : ' rightOptions')}>
+    <BsPencilFill
+      size={18}
+      id='editMessageIcon'
+      className='messageOption'
+      onClick={() => setIsEditing(true)}
+    />
+    <BsTrash2Fill
+      size={18}
+      id='deleteMessageIcon'
+      className='messageOption'
+      onClick={() => setShowModal(true)}
+    />
+  </div>
+}
 const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, t, token }) => {
   const handleSubmit = async () => {
     removeMessageHandler(token);
@@ -45,7 +61,7 @@ export default ({ username, body, id }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const lines = body.split('\n').map((line, index) => (
-      <div key={index}><Anchorme target="_blank">{line}</Anchorme></div>
+    <div key={index}><Anchorme target="_blank">{line}</Anchorme></div>
   ));
 
   const messageRemovedNotify = () => toast.success(t('messageRemoved'));
@@ -138,20 +154,9 @@ export default ({ username, body, id }) => {
           <div className='messageTime'>
             {formattedTime}
           </div>
-          <div className={"messageOptionsHandler" + (isMessageMine ? ' leftOptions' : ' rightOptions')}>
-            <BsPencilFill
-              size={18}
-              id='editMessageIcon'
-              className='messageOption'
-              onClick={() => setIsEditing(true)}
-            />
-            <BsTrash2Fill
-              size={18}
-              id='deleteMessageIcon'
-              className='messageOption'
-              onClick={() => setShowModal(true)}
-            />
-          </div>
+          {isMessageMine || currentUser.name == 'admin' 
+          ?
+        <MessageOtions isMessageMine={isMessageMine} setIsEditing={setIsEditing} setShowModal={setShowModal}/>:''}
         </>)
       }
 

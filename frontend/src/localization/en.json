@@ -24,7 +24,7 @@
     "editedMessage": "Edited Message",
     "removeMessage": "Remove Message",
     "messageRemoveConfirmation": "Are you sure you want to remove the message?",
-    "your": "Your",
+    "your": "You",
     "enterMessage": "Enter message...",
     "messagesWithCount_zero": "{{count}} messages",
     "messagesWithCount_one": "{{count}} message",

@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { selectCurrentUser } from "../../slices/authSlice";
 import { selectMessages } from "../../slices/messagesSlice";
 import { useTranslation } from 'react-i18next';
+import { selectMobileMenuState, toggleMenu} from "../../slices/mobileMenuSlice";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -116,6 +117,7 @@ export default () => {
   const currentChennelId = useSelector(selectCurrentChannelId);
   const currentChannelMessagesIds = messages.filter((m) => m.channelId == currentChennelId).map((m) => m.id)
   const currentUser = useSelector(selectCurrentUser);
+  const isMenuOpen = useSelector(selectMobileMenuState)
 
   const channelCreatedNotify = () => toast.success(t('channelCreated'));
   const channelRemovedNotify = () => toast.success(t('channelRemoved'));
@@ -158,15 +160,16 @@ export default () => {
   };
 
 
-  const handleClick = (id) => () => {
+  const handleChangeChannel = (id) => () => {
     dispatch(setCurrentChannelId(+id));
+    dispatch(toggleMenu());
   };
 
   const channelList = channels.map((channel) => <Channel
     key={channel.id}
     name={channel.name}
     variant={currentChennelId == channel.id ? 'secondary' : ''}
-    handleClick={handleClick(channel.id)}
+    handleClick={handleChangeChannel(channel.id)}
     removable={channel.removable}
     id={channel.id}
     handleOpenModal={handleOpenModal}
@@ -182,6 +185,7 @@ export default () => {
         }
       });
       channelCreatedNotify()
+      handleChangeChannel(res.data.id)
       return res.data
     } catch (error) {
       networkErrorNotify();
@@ -226,7 +230,11 @@ export default () => {
   };
 
   return (
-    <Col xs={4} md={3} className="border-end px-0 bg-light d-flex flex-column h-100">
+    <Col 
+      xs={4} 
+      md={3} 
+      className={"border-end px-0 bg-light d-flex flex-column h-100" + (isMenuOpen ? ' open' : '')} 
+      id="channelsHolder">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4 align-items-center">
         <b>{t('channels')}</b>
         <Button type="button" className="p-0 text-primary" variant="btn-group-vertical" onClick={() => handleOpenModal('create')}>
