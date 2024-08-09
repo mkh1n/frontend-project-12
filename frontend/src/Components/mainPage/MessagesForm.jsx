@@ -137,9 +137,8 @@ export default () => {
           style={{ resize: 'none' }}
           rows={1}
           onKeyDown={onKeyDown}
-          value={f.values.messageText}
+          value={ isSending ? '' : f.values.messageText}
           ref={formRef}
-          disabled={isSending}
           onChange={handleChange}
         />
         <Button
