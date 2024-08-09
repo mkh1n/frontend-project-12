@@ -4,7 +4,7 @@ import { selectMessages } from "../../slices/messagesSlice";
 import { useTranslation } from "react-i18next";
 
 
-export default () => {
+export default ({filter}) => {
   const channelsList = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
   const messages = useSelector(selectMessages);
@@ -15,7 +15,7 @@ export default () => {
 
   return (
     <div className="bg-light p-3 shadow-sm small" style={{position:"sticky"}}>
-      <p className="m-0"><b># {currentChennel.name}</b></p>
+      <p className="m-0"><b># {filter.clean(currentChennel.name)}</b></p>
       <span className="text-muted">
         {t('messagesWithCount', { count: currentChannelMessages.length })}
       </span>

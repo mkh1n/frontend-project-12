@@ -4,7 +4,7 @@ import Message from "./Message";
 import { BsArrowDownShort } from "react-icons/bs";
 import { Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useRef, useEffect, act } from "react";
+import { useRef, useEffect } from "react";
 import { selectMessages } from "../../slices/messagesSlice";
 import { selectCurrentChannelId } from "../../slices/channelsSlice";
 
@@ -58,7 +58,7 @@ export default ({filter}) => {
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
-        <MessagesHeader />
+        <MessagesHeader filter={filter}/>
         <div id="messages-box" className="chat-messages overflow-auto h-100 messagesPadding" ref={container} onScroll={handleScroll}>
           {messagesList}
           <div 
