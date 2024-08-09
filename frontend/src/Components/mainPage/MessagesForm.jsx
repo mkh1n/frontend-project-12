@@ -11,7 +11,6 @@ import axios from 'axios';
 import routes from '../../routes';
 import { useState, useEffect, useRef } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { isSupported, subscribe } from 'on-screen-keyboard-detector';
 
 const postMessage = async (token, newMessage) => {
   const res = await axios.post(routes.messagesPath(), newMessage, {
@@ -34,13 +33,14 @@ export default () => {
   const formRef = useRef(null);
   const [isMobileKeybord, setIsMobileKeyboard] = useState(false);
 
-  if (isSupported()) {
-    subscribe(visibility => {
-      setIsMobileKeyboard(visibility === "visible")
-    })
+  if ('virtualKeyboard' in navigator) {
+    let {height} = navigator.virtualKeyboard.boundingRect;
+    setIsMobileKeyboard(height !== 0)
   }
   useEffect(()=>{
-    bodyEl.style.height = maxHeight - window.scrollY + 'px';
+    let {height} = navigator.virtualKeyboard.boundingRect;
+
+    bodyEl.style.height = maxHeight - height + 'px';
     console.log('keyboard')
   }, [isMobileKeybord]);
 
