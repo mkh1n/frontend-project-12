@@ -1,6 +1,5 @@
 import { BsSend } from 'react-icons/bs';
-import { Form } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../slices/authSlice';
 import { selectCurrentChannelId } from '../../slices/channelsSlice';
@@ -25,24 +24,44 @@ export default () => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const currentChannelId = useSelector(selectCurrentChannelId);
-  const bodyEl = document.body
-  var maxHeight = bodyEl.offsetHeight;
-  console.log(maxHeight)
+  const bodyEl = document.body;
   const [isEmojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const formRef = useRef(null);
-  const [isMobileKeybord, setIsMobileKeyboard] = useState(false);
+  const [isMobileKeyboard, setIsMobileKeyboard] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-  if ('virtualKeyboard' in navigator) {
-    let {height} = navigator.virtualKeyboard.boundingRect;
-    setIsMobileKeyboard(height !== 0)
-  }
-  useEffect(()=>{
-    let {height} = navigator.virtualKeyboard.boundingRect;
+  useEffect(() => {
+    if ('virtualKeyboard' in navigator) {
+      navigator.virtualKeyboard.overlaysContent = true;
 
-    bodyEl.style.height = maxHeight - height + 'px';
-    console.log('keyboard')
-  }, [isMobileKeybord]);
+      const updateKeyboardHeight = () => {
+        const { height } = navigator.virtualKeyboard.boundingRect;
+        setKeyboardHeight(height);
+        setIsMobileKeyboard(height !== 0);
+      };
+
+      navigator.virtualKeyboard.addEventListener('geometrychange', updateKeyboardHeight);
+
+      return () => {
+        navigator.virtualKeyboard.removeEventListener('geometrychange', updateKeyboardHeight);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const updateBodyHeight = () => {
+      const maxHeight = window.innerHeight;
+      bodyEl.style.height = `${maxHeight - keyboardHeight}px`;
+    };
+
+    updateBodyHeight();
+
+    window.addEventListener('resize', updateBodyHeight);
+    return () => {
+      window.removeEventListener('resize', updateBodyHeight);
+    };
+  }, [keyboardHeight]);
 
   const f = useFormik({
     onSubmit: values => {
@@ -95,23 +114,25 @@ export default () => {
       f.setFieldValue('');
     }
   };
+
   const addNewLine = () => {
     if (f.values.messageText !== '') {
       f.setFieldValue('messageText', f.values.messageText + '\n');
     }
   }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     f.handleSubmit(e);
   }
+
   const onKeyDown = (event) => {
     if (event.shiftKey && event.key === 'Enter') {
       event.preventDefault();
       addNewLine();
     } else if (event.key === 'Enter') {
       event.preventDefault();
-      console.log(isMobileKeybord)
-      return isMobileKeybord ? addNewLine() : handleSubmit(event)
+      return isMobileKeyboard ? addNewLine() : handleSubmit(event);
     }
   };
 
@@ -149,7 +170,7 @@ export default () => {
           style={{ resize: 'none' }}
           rows={1}
           onKeyDown={onKeyDown}
-          value={ isSending ? '' : f.values.messageText}
+          value={isSending ? '' : f.values.messageText}
           ref={formRef}
           onChange={handleChange}
         />
