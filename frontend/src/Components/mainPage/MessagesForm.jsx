@@ -26,8 +26,9 @@ export default () => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const currentChannelId = useSelector(selectCurrentChannelId);
-  const bodyEl = document.getElementsByTagName('body')
+  const bodyEl = document.body
   var maxHeight = bodyEl.offsetHeight;
+  console.log(maxHeight)
   const [isEmojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const formRef = useRef(null);
@@ -39,7 +40,7 @@ export default () => {
     })
   }
   useEffect(()=>{
-    bodyEl.style.height = maxHeight - window.scrollY;
+    bodyEl.style.height = maxHeight - window.scrollY + 'px';
     console.log('keyboard')
   }, [isMobileKeybord]);
 
