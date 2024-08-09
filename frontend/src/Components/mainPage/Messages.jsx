@@ -18,9 +18,8 @@ export default ({filter}) => {
   const currentChannelMessages = messages.filter((m) => m.channelId == currentChannelId);
 
   const Scroll = () => {
-    const { offsetHeight, scrollHeight, scrollTop } = container.current;
-    const actualScrollTop = scrollHeight - scrollTop - offsetHeight;
-    if (actualScrollTop <= 400) {
+    const { scrollTop } = container.current;
+    if (scrollTop >= -200) {
       container.current?.scrollTo(0, 0);
     }
   };
