@@ -53,16 +53,17 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
   );
 };
 
-export default ({ username, body, id }) => {
+export default ({ username, body, id, filter }) => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const isMessageMine = username == currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
+  
   const lines = body.split('\n').map((line, index) => (
-    <div key={index}><Anchorme target="_blank">{line}</Anchorme></div>
+    <div key={index}><Anchorme target="_blank">{filter.clean(line)}</Anchorme></div>
   ));
+  
 
   const messageRemovedNotify = () => toast.success(t('messageRemoved'));
   const messageEditedNotify = () => toast.success(t('messageEdited'));

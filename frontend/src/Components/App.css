@@ -91,9 +91,11 @@ nav {
   background-color: #5b6166 !important;
 }
 
-.channelName:hover+.dropdown, .dropdown.show{
+.channelName:hover+.dropdown,
+.dropdown.show {
   display: unset !important;
 }
+
 .channelName.btn-secondary+.dropdown,
 .dropdown:hover {
   display: unset !important;
@@ -245,24 +247,35 @@ nav {
   color: #b3b3b3;
   cursor: pointer;
 }
+
 #burgerButton {
   display: none;
 }
 
 @media screen and (max-width: 650px) {
+  #mobileContainer {
+    box-sizing: border-box;
+    height: unset !important;
+    width: unset !important;
+  }
+
   #sendInput {
     max-height: 200px !important;
   }
+
   .message {
     max-width: 85%;
     margin: 12px 0;
   }
+
   .messagesPadding {
     padding: 5px !important;
   }
-  #sendInputHolder{
+
+  #sendInputHolder {
     padding-bottom: 5px !important;
   }
+
   #burgerButton {
     display: block;
     transform-origin: 16px 11px;
@@ -304,10 +317,13 @@ nav {
   #scrollDownButton {
     right: 2%;
   }
-  .channelName+.dropdown, .dropdown{
+
+  .channelName+.dropdown,
+  .dropdown {
     display: unset !important;
   }
-  .modal{
+
+  .modal {
     top: -100px !important;
   }
 }

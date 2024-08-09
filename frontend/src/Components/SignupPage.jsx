@@ -58,7 +58,7 @@ export default () => {
   });
   return (
     <MainContainer>
-      <Row className="justify-content-center align-content-center h-100 w-100">
+      <Row className="justify-content-center align-content-center h-100 w-100" id="mobileContainer">
         <Col xs={12} md={8} xxl={6}>
           <Card className="shadow-sm">
             <Card.Body className='row p-5'>

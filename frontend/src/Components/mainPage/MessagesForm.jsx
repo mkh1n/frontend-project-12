@@ -138,15 +138,12 @@ export default () => {
           rows={1}
           onKeyDown={onKeyDown}
           value={f.values.messageText}
-          onBlur={f.handleBlur}
           ref={formRef}
-          autoFocus
           disabled={isSending}
           onChange={handleChange}
         />
         <Button
           id="sendButton"
-          type="submit"
           className="btn btn-group-vertical"
           onClick={f.handleSubmit}
           disabled={f.values.messageText.length === 0}

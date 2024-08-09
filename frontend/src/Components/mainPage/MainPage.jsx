@@ -11,6 +11,7 @@ import MainContainer from "../MainContainer";
 import { Container, Row, Spinner } from 'react-bootstrap';
 import Channels from "./Channels";
 import Messages from "./Messages";
+import LeoProfanity from 'leo-profanity';
 
 const fetchChannels = async (token, dispatch) => {
   const res = await axios.get(routes.channelsPath(), {
@@ -37,7 +38,10 @@ export default () => {
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const filter = LeoProfanity;
+  filter.add(filter.getDictionary('en'))
+  filter.add(filter.getDictionary('ru'))
+  
   useEffect(() => {
     const loadPageData = async () => {
       setLoading(true)
@@ -65,8 +69,8 @@ export default () => {
       ) : (
         <Container fluid className="h-100 overflow-hidden border-top">
           <Row className="h-100 bg-white flex-md-row">
-            <Channels></Channels>
-            <Messages></Messages>
+            <Channels filter={filter}></Channels>
+            <Messages filter={filter}></Messages>
           </Row>
         </Container>
       )}

@@ -14,7 +14,7 @@ import { selectMobileMenuState, toggleMenu} from "../../slices/mobileMenuSlice";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t }) => {
+const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t, filter}) => {
   return (
     <Nav.Item className="w-100 position-relative d-flex">
       <Button
@@ -24,7 +24,7 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t
         id={id}
         onClick={handleClick}
       >
-        <span className="me-1">#</span>{name}
+        <span className="me-1">#</span>{filter.clean(name)}
       </Button>
       {removable && (
         <Dropdown>
@@ -54,7 +54,7 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
   const f = useFormik({
     onSubmit: values => {
       setLoading(true);
-      console.log(action.name == 'remove' ? action.handler(token) : action.handler(token, values.channelName))
+      action.name == 'remove' ? action.handler(token) : action.handler(token, values.channelName)
       handleCloseModal();
       values.channelName = '';
       setLoading(false);
@@ -111,7 +111,7 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
   );
 };
 
-export default () => {
+export default ({filter}) => {
   const messages = useSelector(selectMessages);
   const channels = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
@@ -174,6 +174,7 @@ export default () => {
     id={channel.id}
     handleOpenModal={handleOpenModal}
     t={t}
+    filter={filter}
   />
   );
 

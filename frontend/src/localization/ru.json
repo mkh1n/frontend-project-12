@@ -24,7 +24,7 @@
     "editedMessage": "Измененное сообщение",
     "removeMessage": "Удалить сообщение",
     "messageRemoveConfirmation": "Вы действительно хотите удалить сообщение?",
-    "your": "Ваше",
+    "your": "Вы",
     "enterMessage" : "Введите сообщение...",
     "messagesWithCount_zero": "{{count}} сообщений",
     "messagesWithCount_one": "{{count}} сообщение",

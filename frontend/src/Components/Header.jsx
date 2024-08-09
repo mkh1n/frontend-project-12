@@ -45,9 +45,7 @@ export default () => {
 
   useEffect(() => {
     const listener = (event) => {
-      console.log('click')
-      console.log(event.target.closest('#channelsHolder'));
-      if (isMenuOpen && !event.target.closest('#channelsHolder')) {
+      if (isMenuOpen && !event.target.closest('#channelsHolder') && !event.target.closest('#burgerButton')) {
         dispatch(toggleMenu());
       }
     };

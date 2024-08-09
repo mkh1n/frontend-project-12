@@ -4,17 +4,17 @@ import Message from "./Message";
 import { BsArrowDownShort } from "react-icons/bs";
 import { Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { selectMessages } from "../../slices/messagesSlice";
 import { selectCurrentChannelId } from "../../slices/channelsSlice";
 
-export default () => {
+export default ({filter}) => {
   const messages = useSelector(selectMessages);
   const currentChannelId = useSelector(selectCurrentChannelId);
   const container = useRef(null)
   const bottomRef = useRef(null);
   const scrollBottomRef = useRef(null);
-
+ 
   const currentChannelMessages = messages.filter((m) => m.channelId == currentChannelId);
 
   const Scroll = () => {
@@ -53,6 +53,7 @@ export default () => {
       body={message.body}
       id={message.id}
       key={message.id}
+      filter={filter}
     />
   ));
   messagesList.reverse();
