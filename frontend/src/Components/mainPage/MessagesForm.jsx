@@ -89,7 +89,7 @@ export default () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    f.handleSubmit();
+    f.handleSubmit(e);
   }
   const onKeyDown = (event) => {
     if (isSupported()) {
