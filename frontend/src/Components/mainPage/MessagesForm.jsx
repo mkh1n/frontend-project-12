@@ -31,6 +31,12 @@ export default () => {
   const formRef = useRef(null);
   const [isMobileKeybord, setIsMobileKeyboard] = useState(false);
 
+  if (isSupported()) {
+    subscribe(visibility => {
+      setIsMobileKeyboard(visibility === "visible")
+    })
+  }
+
   const f = useFormik({
     onSubmit: values => {
       if (values.messageText === '') {
@@ -92,12 +98,6 @@ export default () => {
     f.handleSubmit(e);
   }
   const onKeyDown = (event) => {
-    if (isSupported()) {
-      subscribe(visibility => {
-        setIsMobileKeyboard(visibility === "visible")
-      })
-    }
-
     if (event.shiftKey && event.key === 'Enter') {
       event.preventDefault();
       addNewLine();
@@ -149,7 +149,7 @@ export default () => {
         <Button
           id="sendButton"
           className="btn btn-group-vertical"
-          onClick={handleSubmit}
+          onMouseDown={handleSubmit}
           disabled={f.values.messageText.length === 0}
         >
           <BsSend size={20} id="sendLogo" />

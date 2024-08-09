@@ -30,13 +30,8 @@ export default ({filter}) => {
   };
   
   const handleScroll = () => {
-    const { offsetHeight, scrollHeight, scrollTop } = container.current;
-    const actualScrollTop = scrollHeight - scrollTop - offsetHeight;
-    console.log(actualScrollTop)
-    console.log('scrollHeight', scrollHeight);
-    console.log('scrollTop', scrollTop);
-    console.log('offsetHeight', offsetHeight)
-    if (actualScrollTop <= 150) {
+    const {scrollTop } = container.current;
+    if (scrollTop >= -200) {
       scrollBottomRef.current.style.display = "none";
     } else {
       scrollBottomRef.current.style.display = "flex";
