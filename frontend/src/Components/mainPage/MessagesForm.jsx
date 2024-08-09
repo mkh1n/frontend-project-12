@@ -26,6 +26,8 @@ export default () => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const currentChannelId = useSelector(selectCurrentChannelId);
+  const bodyEl = document.getElementsByTagName('body')
+  var maxHeight = bodyEl.height();
   const [isEmojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const formRef = useRef(null);
@@ -36,6 +38,10 @@ export default () => {
       setIsMobileKeyboard(visibility === "visible")
     })
   }
+  useEffect(()=>{
+    bodyEl.style.height = maxHeight - window.scrollY;
+    console.log('keyboard')
+  }, [isMobileKeybord]);
 
   const f = useFormik({
     onSubmit: values => {
