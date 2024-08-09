@@ -57,7 +57,7 @@ export default () => {
   }, [isMenuOpen]);
 
   return (
-    <Navbar bg="light" data-bs-theme="light" style={{position:"fixed"}}>
+    <Navbar bg="light" data-bs-theme="light" style={{position:"sticky"}}>
       <Container>
         {Object.keys(currentUser).length !== 0 ?
           <BurgerButton isMenuOpen={isMenuOpen} onClick={handleMenuClick} ref={mobileMenuRef} />

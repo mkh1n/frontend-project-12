@@ -4,7 +4,7 @@ import Message from "./Message";
 import { BsArrowDownShort } from "react-icons/bs";
 import { Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, act } from "react";
 import { selectMessages } from "../../slices/messagesSlice";
 import { selectCurrentChannelId } from "../../slices/channelsSlice";
 
@@ -32,7 +32,10 @@ export default ({filter}) => {
   const handleScroll = () => {
     const { offsetHeight, scrollHeight, scrollTop } = container.current;
     const actualScrollTop = scrollHeight - scrollTop - offsetHeight;
-  
+    console.log(actualScrollTop)
+    console.log('scrollHeight', scrollHeight);
+    console.log('scrollTop', scrollTop);
+    console.log('offsetHeight', offsetHeight)
     if (actualScrollTop <= 150) {
       scrollBottomRef.current.style.display = "none";
     } else {

@@ -87,6 +87,10 @@ export default () => {
       f.setFieldValue('messageText', f.values.messageText + '\n');
     }
   }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+  }
   const onKeyDown = (event) => {
     if (isSupported()) {
       subscribe(visibility => {
@@ -99,7 +103,8 @@ export default () => {
       addNewLine();
     } else if (event.key === 'Enter') {
       event.preventDefault();
-      return isMobileKeybord ? addNewLine() : f.handleSubmit();
+      console.log(isMobileKeybord)
+      return isMobileKeybord ? addNewLine() : handleSubmit(event)
     }
   };
 
@@ -144,7 +149,7 @@ export default () => {
         <Button
           id="sendButton"
           className="btn btn-group-vertical"
-          onClick={f.handleSubmit}
+          onClick={handleSubmit}
           disabled={f.values.messageText.length === 0}
         >
           <BsSend size={20} id="sendLogo" />

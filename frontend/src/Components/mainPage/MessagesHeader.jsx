@@ -14,7 +14,7 @@ export default () => {
   const currentChannelMessages = messages.filter((message) => message.channelId == currentChennelId);
 
   return (
-    <div className="bg-light p-3 shadow-sm small" style={{position:"fixed"}}>
+    <div className="bg-light p-3 shadow-sm small" style={{position:"sticky"}}>
       <p className="m-0"><b># {currentChennel.name}</b></p>
       <span className="text-muted">
         {t('messagesWithCount', { count: currentChannelMessages.length })}
