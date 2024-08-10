@@ -8,13 +8,13 @@ import { useRef, useEffect } from "react";
 import { selectMessages } from "../../slices/messagesSlice";
 import { selectCurrentChannelId } from "../../slices/channelsSlice";
 
-export default ({filter}) => {
+export default ({ filter }) => {
   const messages = useSelector(selectMessages);
   const currentChannelId = useSelector(selectCurrentChannelId);
   const container = useRef(null)
   const bottomRef = useRef(null);
   const scrollBottomRef = useRef(null);
- 
+
   const currentChannelMessages = messages.filter((m) => m.channelId == currentChannelId);
 
   const Scroll = () => {
@@ -23,13 +23,13 @@ export default ({filter}) => {
       container.current?.scrollTo(0, 0);
     }
   };
-  
+
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  
+
   const handleScroll = () => {
-    const {scrollTop } = container.current;
+    const { scrollTop } = container.current;
     if (scrollTop >= -200) {
       scrollBottomRef.current.style.display = "none";
     } else {
@@ -41,41 +41,37 @@ export default ({filter}) => {
   }, [currentChannelMessages]);
 
   useEffect(() => {
-      bottomRef.current?.scrollIntoView();
+    bottomRef.current?.scrollIntoView();
   }, [currentChannelId]);
 
-  const messagesList = currentChannelMessages.map((message, index, array) => {
-    const isFirstMessage = (index == 0) || (array[index].username !== array[index - 1].username);
-    return <Message
-      username={message.username}
-      body={message.body}
-      id={message.id}
-      key={message.id}
-      filter={filter}
-      isFirstMessage={isFirstMessage}
-    />
-  }
-
+  const messagesList = currentChannelMessages.map((message) => (<Message
+    username={message.username}
+    body={message.body}
+    id={message.id}
+    key={message.id}
+    filter={filter}
+    isFirstMessage={isFirstMessage}
+  />)
   );
   messagesList.reverse();
 
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
-        <MessagesHeader filter={filter}/>
+        <MessagesHeader filter={filter} />
         <div id="messages-box" className="chat-messages overflow-auto h-100 messagesPadding" ref={container} onScroll={handleScroll}>
           {messagesList}
-          <div 
-          ref={bottomRef}
-          style={{ position: 'absolute' }}
+          <div
+            ref={bottomRef}
+            style={{ position: 'absolute' }}
           ></div>
-          <Button 
+          <Button
             variant="secondary"
-            className="rounded-5 btn-floating btn-lg" 
-            id="scrollDownButton" 
+            className="rounded-5 btn-floating btn-lg"
+            id="scrollDownButton"
             ref={scrollBottomRef}
             onClick={scrollToBottom}>
-            <BsArrowDownShort/>
+            <BsArrowDownShort />
           </Button>
         </div>
         <MessagesForm />
