@@ -44,15 +44,19 @@ export default ({filter}) => {
       bottomRef.current?.scrollIntoView();
   }, [currentChannelId]);
 
-  const messagesList = currentChannelMessages.map((message) => (
-    <Message
+  const messagesList = currentChannelMessages.map((message, index, array) => {
+    const isFirstMessage = (index == 0) || (array[index].username !== array[index - 1].username);
+    return <Message
       username={message.username}
       body={message.body}
       id={message.id}
       key={message.id}
       filter={filter}
+      isFirstMessage={isFirstMessage}
     />
-  ));
+  }
+
+  );
   messagesList.reverse();
 
   return (

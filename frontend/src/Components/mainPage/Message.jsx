@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { Anchorme } from 'react-anchorme'
 import TextareaAutosize from 'react-textarea-autosize';
 
-const MessageOtions = ({isMessageMine, setIsEditing, setShowModal}) => {
+const MessageOtions = ({ isMessageMine, setIsEditing, setShowModal }) => {
   return <div className={"messageOptionsHandler" + (isMessageMine ? ' leftOptions' : ' rightOptions')}>
     <BsPencilFill
       size={18}
@@ -53,24 +53,21 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
   );
 };
 
-export default ({ username, body, id, filter }) => {
+export default ({ username, body, id, filter, isFirstMessage }) => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const isMessageMine = username == currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const lines = body.split('\n').map((line, index) => (
     <div key={index}><Anchorme target="_blank">{filter.clean(line)}</Anchorme></div>
   ));
-  
+
 
   const messageRemovedNotify = () => toast.success(t('messageRemoved'));
   const messageEditedNotify = () => toast.success(t('messageEdited'));
   const networkErrorNotify = () => toast.error(t('networkError'));
-
-  var date = new Date();
-  var formattedTime = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -116,7 +113,7 @@ export default ({ username, body, id, filter }) => {
     },
   });
   return (
-    <div className={"d-flex justify-content-between align-items-end text-break message"
+    <div className={"d-flex justify-content-between align-items-end text-break message " + (!isFirstMessage ? "firstMessageOfUser" : "")
       + (isEditing ? ' editing' : '')
       + (isMessageMine ? ' fromMe' : '')}>
       {isEditing ?
@@ -131,7 +128,7 @@ export default ({ username, body, id, filter }) => {
                 value={f.values.editedMessage}
                 onChange={f.handleChange}
                 name="editedMessage"
-                style={{ resize: 'none' , borderRadius: "10px", border: "none"}}
+                style={{ resize: 'none', borderRadius: "10px", border: "none" }}
               />
             </Form.Group>
             <Button variant="secondary" onClick={() => setIsEditing(false)}>
@@ -147,18 +144,19 @@ export default ({ username, body, id, filter }) => {
         </>)
         :
         (<>
-          <div className="usernameBlock">
-            {isMessageMine ? t('your') : username}
-          </div>
+          {
+          isFirstMessage ?
+            <div className="usernameBlock">
+              {isMessageMine ? t('your') : username}
+            </div> :
+            ''
+          }
           <div className='innerMessage'>
             {lines}
           </div>
-          <div className='messageTime'>
-            {formattedTime}
-          </div>
-          {isMessageMine || currentUser.name == 'admin' 
-          ?
-        <MessageOtions isMessageMine={isMessageMine} setIsEditing={setIsEditing} setShowModal={setShowModal}/>:''}
+          {isMessageMine || currentUser.name == 'admin'
+            ?
+            <MessageOtions isMessageMine={isMessageMine} setIsEditing={setIsEditing} setShowModal={setShowModal} /> : ''}
         </>)
       }
 

@@ -158,6 +158,10 @@ nav {
   max-width: 50%;
 }
 
+.firstMessageOfUser{
+  margin-top: 0px !important;
+}
+
 .fromMe {
   border-radius: 15px 15px 1px 15px;
   background-color: #248bf5;
@@ -190,17 +194,8 @@ nav {
   color: gray;
   left: 5px;
   font-size: 12px;
+  width: max-content;
 }
-
-.messageTime {
-  font-size: 10px;
-  text-align: right;
-  margin-left: 10px;
-  text-wrap: nowrap;
-  position: relative;
-  top: 3px;
-}
-
 .message.editing {
   background-color: #dfecff;
 }

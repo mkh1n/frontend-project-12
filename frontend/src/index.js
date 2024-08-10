@@ -12,6 +12,10 @@ const rollbarConfig = {
   accessToken: '80fe158640cd4d8e9ea38371f1682cfd',
   environment: 'testenv',
 }
+function TestError() {
+  const a = null
+  return a.hello()
+}
 
 const root = ReactDOM.createRoot(document.getElementById('chat'));
 
