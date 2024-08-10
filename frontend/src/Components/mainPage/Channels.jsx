@@ -27,6 +27,7 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t
         <span className="me-1">#</span>{filter.clean(name)}
       </Button>
       {removable && (
+        <>
         <Dropdown>
           <Dropdown.Toggle as={Button} variant="link" >
           </Dropdown.Toggle>
@@ -35,6 +36,8 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t
             <Dropdown.Item onClick={() => handleOpenModal('remove', id)}>{t('remove')}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        <span class="visually-hidden">{t('channelManagement')}</span>
+        </>
       )}
     </Nav.Item>
   )

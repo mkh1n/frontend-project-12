@@ -3,6 +3,7 @@
     "channelRenameDescription": "Переименовать канала",
     "channelRemoveDescription": "Удалить канал",
     "channelCreateDescription": "Добавить канал",
+    "channelManagement": "Управление каналом",
     "channelCreated": "Канал создан",
     "channelRemoved":"Канал удален",
     "channelRenamed":"Канал переименован",
