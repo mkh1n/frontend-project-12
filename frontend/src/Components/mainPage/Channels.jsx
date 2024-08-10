@@ -35,8 +35,8 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t
             <Dropdown.Item onClick={() => handleOpenModal('rename', id)}>{t('rename')}</Dropdown.Item>
             <Dropdown.Item onClick={() => handleOpenModal('remove', id)}>{t('remove')}</Dropdown.Item>
           </Dropdown.Menu>
+          <span class="visually-hidden">{t('channelManagement')}</span>
         </Dropdown>
-        <span class="visually-hidden">{t('channelManagement')}</span>
         </>
       )}
     </Nav.Item>
@@ -245,7 +245,7 @@ export default ({filter}) => {
       id="channelsHolder">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4 align-items-center">
         <b>{t('channels')}</b>
-        <Button type="button" className="p-0 text-primary btn-group-vertical" onClick={() => handleOpenModal('create')}>
+        <Button type="button" className="p-0 text-primary btn-group-vertical" variant="outline-primary" onClick={() => handleOpenModal('create')}>
           <BsPlus size={20} />
           <span className="visually-hidden">+</span>
         </Button>
