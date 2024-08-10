@@ -163,6 +163,7 @@ export default ({filter}) => {
   const handleChangeChannel = (id) => () => {
     dispatch(setCurrentChannelId(+id));
     dispatch(toggleMenu());
+    console.log(id)
   };
 
   const channelList = channels.map((channel) => <Channel
@@ -186,7 +187,7 @@ export default ({filter}) => {
         }
       });
       channelCreatedNotify()
-      handleChangeChannel(res.data.id)
+      dispatch(setCurrentChannelId(+res.data.id));
       return res.data
     } catch (error) {
       networkErrorNotify();
@@ -202,6 +203,7 @@ export default ({filter}) => {
         }
       });
       channelRenamedNotify();
+      dispatch(setCurrentChannelId(+res.data.id));
       return res.data
     } catch (error) {
       networkErrorNotify();
@@ -216,14 +218,15 @@ export default ({filter}) => {
           Authorization: `Bearer ${token}`,
         }
       });
-      channelRemovedNotify()
-      currentChannelMessagesIds.map(async (messageId) => {
+      const thisChannelMessages = messages.filter((m) => m.channelId == channelId)
+      thisChannelMessages.map(async (messageId) => {
         await axios.delete(routes.messagePath(messageId), {
           headers: {
             Authorization: `Bearer ${token}`,
           }
         });
       });
+      channelRemovedNotify()
     } catch (error){
       networkErrorNotify();
       throw error;

@@ -44,7 +44,6 @@ const subscribeToSocketEvents = () => {
     socket.on('newChannel', (payload) => {
       console.log('Socket event: newChannel', payload);
       store.dispatch(addChannel(payload));
-      store.dispatch(setCurrentChannelId(payload.id))
     });
 
     socket.on('removeChannel', (payload) => {
@@ -55,7 +54,6 @@ const subscribeToSocketEvents = () => {
     socket.on('renameChannel', (payload) => {
       console.log('Socket event: renameChannel', payload);
       store.dispatch(renameChannel(payload));
-      store.dispatch(setCurrentChannelId(payload.id))
     });
 
     isSubscribed = true;

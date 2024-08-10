@@ -50,7 +50,6 @@ export default ({ filter }) => {
     id={message.id}
     key={message.id}
     filter={filter}
-    isFirstMessage={isFirstMessage}
   />)
   );
   messagesList.reverse();
