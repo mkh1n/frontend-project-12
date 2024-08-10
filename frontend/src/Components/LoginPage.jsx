@@ -15,7 +15,7 @@ const sendAuthRequest = async (dispatch, loginValues) => {
   dispatch(login({ name: username, token }))
 } 
 export default () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const dispatch = useDispatch()
   const navigate = useNavigate();

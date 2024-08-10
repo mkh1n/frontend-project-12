@@ -45,8 +45,8 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
   const modalRef = useRef(null);
   const validationSchema = Yup.object().shape({
     channelName: action.name === 'remove' ? Yup.string() : Yup.string()
-      .min(3, t('minChannelNameError'))
-      .max(20, t('maxChannelNameError'))
+      .min(3, t('minMaxError'))
+      .max(20, t('minMaxError'))
       .notOneOf(channelsNames, t('uniqueChannelNameError'))
       .required(t('emptyChannelNameError')),
   });
@@ -62,7 +62,9 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
     initialValues: {
       channelName: '',
     },
-    validationSchema
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   useEffect(() => {
@@ -103,7 +105,7 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
         <Button variant="secondary" onClick={handleCloseModal}>
           {t('cancel')}
         </Button>
-        <Button variant={action.name === 'remove' ? "danger" : 'primary'} onClick={f.handleSubmit} disabled={loading}>
+        <Button variant={action.name === 'remove' ? "danger" : 'primary'} onClick={f.handleSubmit} disabled={loading} type="submit">
           {t(action.name === 'remove' ? 'remove' : 'send')}
         </Button>
       </Modal.Footer>

@@ -14,7 +14,8 @@ const sendAuthRequest = async (dispatch, loginValues) => {
   const res = await axios.post(routes.signUpPath(), loginValues);
   const { token, username } = res.data;
   dispatch(login({ name: username, token }))
-} 
+}
+
 export default () => {
   const { t } = useTranslation();
   const dispatch = useDispatch()
@@ -24,7 +25,9 @@ export default () => {
   const schema = yup.object({
     username: yup
       .string()
-      .required(t('emptyUsernameSignUpError')),
+      .required(t('emptyUsernameSignUpError'))
+      .min(3, t('minMaxError'))
+      .max(20, t('minMaxError')),
     password: yup
       .string()
       .required(t('emptyPasswordSignUpError'))
@@ -42,6 +45,8 @@ export default () => {
       confirmPassword: ''
     },
     validationSchema: schema,
+    validateOnChange: false,
+    validateOnBlur: true,
     onSubmit: async (values) => {
       try {
         await sendAuthRequest(dispatch, values)
@@ -56,6 +61,7 @@ export default () => {
       }
     },
   });
+
   return (
     <MainContainer>
       <Row className="justify-content-center align-content-center h-100 w-100" id="mobileContainer">
@@ -69,34 +75,44 @@ export default () => {
                 <Form onSubmit={f.handleSubmit}>
                   <h1 className="text-center mb-4">{t('signup')}</h1>
                   <Form.Group controlId="username" className="form-floating mb-3">
-                    <Form.Control 
-                    type="text" 
-                    placeholder={t('username')}
-                    required value={f.values.username} 
-                    onChange={f.handleChange} 
-                    isInvalid={!!error} />
+                    <Form.Control
+                      type="text"
+                      placeholder={t('username')}
+                      required
+                      value={f.values.username}
+                      onChange={f.handleChange}
+                      onBlur={f.handleBlur}
+                      isInvalid={!!f.errors.username && f.touched.username}
+                    />
                     <Form.Label>{t('username')}</Form.Label>
+                    {f.errors.username && f.touched.username && <div className="invalid-tooltip">{f.errors.username}</div>}
                   </Form.Group>
                   <Form.Group controlId="password" className="form-floating mb-4">
-                    <Form.Control 
-                    type="password" 
-                    placeholder={t('password')}
-                    required value={f.values.password} 
-                    onChange={f.handleChange} 
-                    isInvalid={!!error || !!f.errors.password} />
+                    <Form.Control
+                      type="password"
+                      placeholder={t('password')}
+                      required
+                      value={f.values.password}
+                      onChange={f.handleChange}
+                      onBlur={f.handleBlur}
+                      isInvalid={!!f.errors.password && f.touched.password}
+                    />
                     <Form.Label>{t('password')}</Form.Label>
-                    {f.errors.password && <div class="invalid-tooltip">{f.errors.password}</div>}
+                    {f.errors.password && f.touched.password && <div className="invalid-tooltip">{f.errors.password}</div>}
                   </Form.Group>
                   <Form.Group controlId="confirmPassword" className="form-floating mb-4">
-                    <Form.Control 
-                      type="password" 
+                    <Form.Control
+                      type="password"
                       placeholder={t('confirmPassword')}
-                      required value={f.values.passwordConfirmation} 
-                      onChange={f.handleChange} 
-                      isInvalid={!!error || !!f.errors.confirmPassword} />
+                      required
+                      value={f.values.confirmPassword}
+                      onChange={f.handleChange}
+                      onBlur={f.handleBlur}
+                      isInvalid={!!f.errors.confirmPassword && f.touched.confirmPassword}
+                    />
                     <Form.Label>{t('confirmPassword')}</Form.Label>
-                    {f.errors.confirmPassword && <div class="invalid-tooltip">{f.errors.confirmPassword}</div>}
-                    {error && <div class="invalid-tooltip">{error}</div>}
+                    {f.errors.confirmPassword && f.touched.confirmPassword && <div className="invalid-tooltip">{f.errors.confirmPassword}</div>}
+                    {error && <div className="invalid-tooltip">{error}</div>}
                   </Form.Group>
                   <Button variant="outline-primary" type="submit" className="w-100 mb-3">
                     {t('doSignup')}
