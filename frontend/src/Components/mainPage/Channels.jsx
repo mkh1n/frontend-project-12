@@ -117,7 +117,6 @@ export default ({filter}) => {
   const messages = useSelector(selectMessages);
   const channels = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
-  const currentChannelMessagesIds = messages.filter((m) => m.channelId == currentChennelId).map((m) => m.id)
   const currentUser = useSelector(selectCurrentUser);
   const isMenuOpen = useSelector(selectMobileMenuState)
 
@@ -220,8 +219,8 @@ export default ({filter}) => {
           Authorization: `Bearer ${token}`,
         }
       });
-      const thisChannelMessages = messages.filter((m) => m.channelId == channelId)
-      thisChannelMessages.map(async (messageId) => {
+      const thisChannelMessagesIds = messages.filter((m) => m.channelId == channelId).map(m => m.id)
+      thisChannelMessagesIds.map(async (messageId) => {
         await axios.delete(routes.messagePath(messageId), {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -243,7 +242,7 @@ export default ({filter}) => {
       id="channelsHolder">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4 align-items-center">
         <b>{t('channels')}</b>
-        <Button type="button" className="p-0 text-primary" variant="btn-group-vertical" onClick={() => handleOpenModal('create')}>
+        <Button type="button" className="p-0 text-primary btn-group-vertical" onClick={() => handleOpenModal('create')}>
           <BsPlus size={20} />
           <span className="visually-hidden">+</span>
         </Button>
