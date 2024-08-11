@@ -1,10 +1,10 @@
+import React from 'react';
 import { useSelector } from "react-redux";
 import { selectCurrentChannelId, selectChannels } from "../../slices/channelsSlice";
 import { selectMessages } from "../../slices/messagesSlice";
 import { useTranslation } from "react-i18next";
 
-
-export default ({filter}) => {
+export default function MessageHeader({filter}) {
   const channelsList = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
   const messages = useSelector(selectMessages);
@@ -21,4 +21,4 @@ export default ({filter}) => {
       </span>
     </div>
   );
-};
+}

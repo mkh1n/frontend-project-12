@@ -1,7 +1,6 @@
 import { io } from 'socket.io-client';
-import { addChannel, removeChannel, renameChannel, setCurrentChannelId } from './slices/channelsSlice';
+import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 import { addMessage, editMessage, removeMessage } from './slices/messagesSlice';
-import { toggleMenu } from './slices/mobileMenuSlice';
 import { store } from './store';
 
 let socket;
@@ -9,7 +8,7 @@ let isSubscribed = false;
 
 const getSocketUrl = () => {
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const host = window.location.host;
+  const { host } = window.location;
   return `${protocol}//${host}`;
 };
 
@@ -28,7 +27,6 @@ const subscribeToSocketEvents = () => {
     socket.on('newMessage', (payload) => {
       console.log('Socket event: newMessage', payload);
       store.dispatch(addMessage(payload));
-      
     });
 
     socket.on('renameMessage', (payload) => {
@@ -58,6 +56,6 @@ const subscribeToSocketEvents = () => {
 
     isSubscribed = true;
   }
-}
+};
 
 export default subscribeToSocketEvents;

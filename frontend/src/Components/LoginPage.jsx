@@ -60,7 +60,7 @@ export default () => {
                   <Form.Group controlId="password" className="form-floating mb-4">
                     <Form.Control type="password" placeholder={t('password')} required value={f.values.password} onChange={f.handleChange} isInvalid={error !== ''} />
                     <Form.Label>{t('password')}</Form.Label>
-                    {error && <div class="invalid-tooltip">{error}</div>}
+                    {error && <div className="invalid-tooltip">{error}</div>}
                   </Form.Group>
                   <Button variant="outline-primary" type="submit" className="w-100 mb-3">
                     {t('login')}

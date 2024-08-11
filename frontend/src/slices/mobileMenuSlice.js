@@ -4,15 +4,15 @@ const slice = createSlice({
   name: 'mobileMenu',
   initialState: false,
   reducers: {
-    toggleMenu: (state, {payload}) => {
-      state = !state
-      return state
+    toggleMenu: (state) => {
+      state = !state;
+      return state;
     },
   },
-})
+});
 
-export const { toggleMenu } = slice.actions
+export const { toggleMenu } = slice.actions;
 
-export default slice.reducer
+export default slice.reducer;
 
-export const selectMobileMenuState = (state) => state.mobileMenu
+export const selectMobileMenuState = (state) => state.mobileMenu;
