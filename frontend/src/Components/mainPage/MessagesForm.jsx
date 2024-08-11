@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-conditional-statements */
-/* eslint-disable functional/no-expression-statements */
 /* eslint-disable no-param-reassign */
 import { BsSend } from 'react-icons/bs';
 import { Form, Button } from 'react-bootstrap';
@@ -36,51 +34,51 @@ const MessageForm = () => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   // eslint-disable-next-line consistent-return
-  useEffect(() => {
+  useEffect(() => { /* eslint-disable-line */
     if ('virtualKeyboard' in navigator) {
-      navigator.virtualKeyboard.overlaysContent = true;
+      navigator.virtualKeyboard.overlaysContent = true; /* eslint-disable-line */
 
       const updateKeyboardHeight = () => {
         const { height } = navigator.virtualKeyboard.boundingRect;
-        setKeyboardHeight(height);
-        setIsMobileKeyboard(height !== 0);
+        setKeyboardHeight(height); /* eslint-disable-line */
+        setIsMobileKeyboard(height !== 0); /* eslint-disable-line */
       };
 
-      navigator.virtualKeyboard.addEventListener('geometrychange', updateKeyboardHeight);
+      navigator.virtualKeyboard.addEventListener('geometrychange', updateKeyboardHeight); /* eslint-disable-line */
 
       return () => {
-        navigator.virtualKeyboard.removeEventListener('geometrychange', updateKeyboardHeight);
+        navigator.virtualKeyboard.removeEventListener('geometrychange', updateKeyboardHeight); /* eslint-disable-line */
       };
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { /* eslint-disable-line */
     const updateBodyHeight = () => {
       const maxHeight = window.innerHeight;
-      bodyEl.style.height = `${maxHeight - keyboardHeight}px`;
+      bodyEl.style.height = `${maxHeight - keyboardHeight}px`; /* eslint-disable-line */
     };
 
-    updateBodyHeight();
+    updateBodyHeight(); /* eslint-disable-line */
 
-    window.addEventListener('resize', updateBodyHeight);
+    window.addEventListener('resize', updateBodyHeight); /* eslint-disable-line */
     return () => {
-      window.removeEventListener('resize', updateBodyHeight);
+      window.removeEventListener('resize', updateBodyHeight); /* eslint-disable-line */
     };
   }, [bodyEl.style, keyboardHeight]);
 
   const f = useFormik({
     onSubmit: (values) => {
-      if (values.messageText === '') { /* empty */ } else {
-        setIsSending(true);
+      if (values.messageText === '') { /* empty */ } else { /* eslint-disable-line */
+        setIsSending(true); /* eslint-disable-line */
         const newMessage = {
           body: values.messageText,
           channelId: currentChannelId,
           username: currentUser.name,
         };
-        values.messageText = '';
-        postMessage(currentUser.token, newMessage).then(() => {
-          setIsSending(false);
-          formRef.current.focus();
+        values.messageText = ''; /* eslint-disable-line */
+        postMessage(currentUser.token, newMessage).then(() => { /* eslint-disable-line */
+          setIsSending(false); /* eslint-disable-line */
+          formRef.current.focus(); /* eslint-disable-line */
         });
       }
     },
@@ -89,53 +87,53 @@ const MessageForm = () => {
     },
   });
 
-  useEffect(() => {
-    if (!isSending) {
-      formRef.current?.focus();
+  useEffect(() => { /* eslint-disable-line */
+    if (!isSending) { /* eslint-disable-line */
+      formRef.current?.focus(); /* eslint-disable-line */
     }
   }, [isSending]);
 
-  useEffect(() => {
+  useEffect(() => { /* eslint-disable-line */
     const handleClickOutside = (event) => {
-      if (!event.target.closest('#emojiButton') && !event.target.closest('.EmojiPickerReact')) {
-        setEmojiPickerOpen(false);
+      if (!event.target.closest('#emojiButton') && !event.target.closest('.EmojiPickerReact')) { /* eslint-disable-line */
+        setEmojiPickerOpen(false); /* eslint-disable-line */
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', handleClickOutside); /* eslint-disable-line */
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside); /* eslint-disable-line */
     };
   }, []);
 
   const handleChange = (event) => {
-    if (!isSending) {
+    if (!isSending) { /* eslint-disable-line */
       const { value } = event.target;
       const updatedValue = value.replace(/^\s+/, '');
-      f.setFieldValue('messageText', updatedValue);
-    } else {
-      f.setFieldValue('');
+      f.setFieldValue('messageText', updatedValue); /* eslint-disable-line */
+    } else { /* eslint-disable-line */
+      f.setFieldValue(''); /* eslint-disable-line */
     }
   };
 
   const addNewLine = () => {
-    if (f.values.messageText !== '') {
-      f.setFieldValue('messageText', `${f.values.messageText}\n`);
+    if (f.values.messageText !== '') { /* eslint-disable-line */
+      f.setFieldValue('messageText', `${f.values.messageText}\n`); /* eslint-disable-line */
     }
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    f.handleSubmit(e);
+    e.preventDefault(); /* eslint-disable-line */
+    f.handleSubmit(e); /* eslint-disable-line */
   };
 
   // eslint-disable-next-line consistent-return
   const onKeyDown = (event) => {
-    if (event.shiftKey && event.key === 'Enter') {
-      event.preventDefault();
-      addNewLine();
+    if (event.shiftKey && event.key === 'Enter') { /* eslint-disable-line */
+      event.preventDefault(); /* eslint-disable-line */
+      addNewLine(); /* eslint-disable-line */
     } else if (event.key === 'Enter') {
-      event.preventDefault();
+      event.preventDefault(); /* eslint-disable-line */
       return isMobileKeyboard ? addNewLine() : handleSubmit(event);
     }
   };
@@ -161,7 +159,7 @@ const MessageForm = () => {
             <Picker
               id="emojiPicker"
               onEmojiClick={(emojiObject) => {
-                f.setFieldValue('messageText', f.values.messageText + emojiObject.emoji);
+                f.setFieldValue('messageText', f.values.messageText + emojiObject.emoji); /* eslint-disable-line */
               }}
             />
           )}

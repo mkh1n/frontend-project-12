@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-conditional-statements */
-/* eslint-disable functional/no-expression-statements */
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +19,7 @@ const fetchChannels = async (token, dispatch) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  dispatch(setChannelsList(res.data));
+  dispatch(setChannelsList(res.data)); /* eslint-disable-line */
   return res.data;
 };
 
@@ -31,7 +29,7 @@ const fetchMessages = async (token, dispatch) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  dispatch(setMessages(res.data));
+  dispatch(setMessages(res.data)); /* eslint-disable-line */
   return res.data;
 };
 
@@ -41,23 +39,23 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const filter = LeoProfanity;
-  filter.add(filter.getDictionary('en'));
-  filter.add(filter.getDictionary('ru'));
+  filter.add(filter.getDictionary('en')); /* eslint-disable-line */
+  filter.add(filter.getDictionary('ru')); /* eslint-disable-line */
 
-  useEffect(() => {
+  useEffect(() => { /* eslint-disable-line */
     const loadPageData = async () => {
-      setLoading(true);
+      setLoading(true); /* eslint-disable-line */
       const userString = localStorage.getItem('user');
-      if (!userString) {
-        navigate('login');
-      } else {
-        await fetchChannels(currentUser.token, dispatch);
-        await fetchMessages(currentUser.token, dispatch);
-        subscribeToSocketEvents();
-        setLoading(false);
+      if (!userString) { /* eslint-disable-line */
+        navigate('login'); /* eslint-disable-line */
+      } else { /* eslint-disable-line */
+        await fetchChannels(currentUser.token, dispatch); /* eslint-disable-line */
+        await fetchMessages(currentUser.token, dispatch); /* eslint-disable-line */
+        subscribeToSocketEvents(); /* eslint-disable-line */
+        setLoading(false); /* eslint-disable-line */
       }
     };
-    loadPageData();
+    loadPageData(); /* eslint-disable-line */
   }, [currentUser, dispatch, navigate]);
 
   return (

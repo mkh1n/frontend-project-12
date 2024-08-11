@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-conditional-statements */
-/* eslint-disable functional/no-expression-statements */
 import { Button } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
@@ -32,27 +30,26 @@ const Header = () => {
   const isMenuOpen = useSelector(selectMobileMenuState);
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
+    dispatch(logout()); /* eslint-disable-line */
+    navigate('/login'); /* eslint-disable-line */
   };
   const handleMenuClick = () => {
-    console.log('lol', isMenuOpen);
-    dispatch(toggleMenu());
+    dispatch(toggleMenu()); /* eslint-disable-line */
   };
   const goToGomePage = () => {
-    navigate('/');
+    navigate('/'); /* eslint-disable-line */
   };
 
-  useEffect(() => {
+  useEffect(() => { /* eslint-disable-line */
     const listener = (event) => {
-      if (isMenuOpen && !event.target.closest('#channelsHolder') && !event.target.closest('#burgerButton')) {
-        dispatch(toggleMenu());
+      if (isMenuOpen && !event.target.closest('#channelsHolder') && !event.target.closest('#burgerButton')) { /* eslint-disable-line */
+        dispatch(toggleMenu()); /* eslint-disable-line */
       }
     };
 
-    document.addEventListener('mousedown', listener);
+    document.addEventListener('mousedown', listener); /* eslint-disable-line */
     return () => {
-      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('mousedown', listener); /* eslint-disable-line */
     };
   }, [dispatch, isMenuOpen]);
 

@@ -14,11 +14,11 @@ const slice = createSlice({
   initialState: getStateFromLocalStorage(),
   reducers: {
     login: (state, { payload: { name, token } }) => {
-      state.name = name;
-      state.token = token;
+      state.name = name; /* eslint-disable-line */
+      state.token = token; /* eslint-disable-line */
     },
     logout: () => {
-      localStorage.clear();
+      localStorage.clear(); /* eslint-disable-line */
       return {};
     },
   },

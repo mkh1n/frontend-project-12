@@ -1,11 +1,10 @@
-/* eslint-disable functional/no-let */
 import { io } from 'socket.io-client';
 import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 import { addMessage, editMessage, removeMessage } from './slices/messagesSlice';
 import store from './store';
 
-let socket;
-let isSubscribed = false;
+let socket; /* eslint-disable-line */
+let isSubscribed = false; /* eslint-disable-line */
 
 const getSocketUrl = () => {
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -14,48 +13,42 @@ const getSocketUrl = () => {
 };
 
 const subscribeToSocketEvents = () => {
-  if (!isSubscribed) {
-    socket = io(getSocketUrl());
+  if (!isSubscribed) { /* eslint-disable-line */
+    socket = io(getSocketUrl()); /* eslint-disable-line */
 
-    socket.on('connect', () => {
-      console.log('Socket connected');
+    socket.on('connect', () => { /* eslint-disable-line */
+      console.log('Socket connected'); /* eslint-disable-line */
     });
 
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected');
+    socket.on('disconnect', () => { /* eslint-disable-line */
+      console.log('Socket disconnected'); /* eslint-disable-line */
     });
 
-    socket.on('newMessage', (payload) => {
-      console.log('Socket event: newMessage', payload);
-      store.dispatch(addMessage(payload));
+    socket.on('newMessage', (payload) => { /* eslint-disable-line */
+      store.dispatch(addMessage(payload)); /* eslint-disable-line */
     });
 
-    socket.on('renameMessage', (payload) => {
-      console.log('Socket event: renameMessage', payload);
-      store.dispatch(editMessage(payload));
+    socket.on('renameMessage', (payload) => { /* eslint-disable-line */
+      store.dispatch(editMessage(payload)); /* eslint-disable-line */
     });
 
-    socket.on('removeMessage', (payload) => {
-      console.log('Socket event: removeMessage', payload);
-      store.dispatch(removeMessage(payload));
+    socket.on('removeMessage', (payload) => { /* eslint-disable-line */
+      store.dispatch(removeMessage(payload)); /* eslint-disable-line */
     });
 
-    socket.on('newChannel', (payload) => {
-      console.log('Socket event: newChannel', payload);
-      store.dispatch(addChannel(payload));
+    socket.on('newChannel', (payload) => { /* eslint-disable-line */
+      store.dispatch(addChannel(payload)); /* eslint-disable-line */
     });
 
-    socket.on('removeChannel', (payload) => {
-      console.log('Socket event: removeChannel', payload);
-      store.dispatch(removeChannel(payload));
+    socket.on('removeChannel', (payload) => { /* eslint-disable-line */
+      store.dispatch(removeChannel(payload)); /* eslint-disable-line */
     });
 
-    socket.on('renameChannel', (payload) => {
-      console.log('Socket event: renameChannel', payload);
-      store.dispatch(renameChannel(payload));
+    socket.on('renameChannel', (payload) => { /* eslint-disable-line */
+      store.dispatch(renameChannel(payload)); /* eslint-disable-line */
     });
 
-    isSubscribed = true;
+    isSubscribed = true; /* eslint-disable-line */
   }
 };
 

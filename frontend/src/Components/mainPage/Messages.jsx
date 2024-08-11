@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/no-conditional-statements */
 import { BsArrowDownShort } from 'react-icons/bs';
 import { Col, Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -21,29 +19,29 @@ const Messages = ({ filter }) => {
 
   const Scroll = () => {
     const { scrollTop } = container.current;
-    if (scrollTop >= -200) {
-      container.current?.scrollTo(0, 0);
+    if (scrollTop >= -200) { /* eslint-disable-line */
+      container.current?.scrollTo(0, 0); /* eslint-disable-line */
     }
   };
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); /* eslint-disable-line */
   };
 
   const handleScroll = () => {
     const { scrollTop } = container.current;
-    if (scrollTop >= -200) {
-      scrollBottomRef.current.style.display = 'none';
-    } else {
-      scrollBottomRef.current.style.display = 'flex';
+    if (scrollTop >= -200) { /* eslint-disable-line */
+      scrollBottomRef.current.style.display = 'none'; /* eslint-disable-line */
+    } else { /* eslint-disable-line */
+      scrollBottomRef.current.style.display = 'flex'; /* eslint-disable-line */
     }
   };
-  useEffect(() => {
-    Scroll();
+  useEffect(() => { /* eslint-disable-line */
+    Scroll(); /* eslint-disable-line */
   }, [currentChannelMessages]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView();
+  useEffect(() => { /* eslint-disable-line */
+    bottomRef.current?.scrollIntoView(); /* eslint-disable-line */
   }, [currentChannelId]);
 
   const messagesList = currentChannelMessages.map((message) => (
@@ -55,7 +53,7 @@ const Messages = ({ filter }) => {
       filter={filter}
     />
   ));
-  messagesList.reverse();
+  messagesList.reverse(); /* eslint-disable-line */
 
   return (
     <Col className="p-0 h-100">

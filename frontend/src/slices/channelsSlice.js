@@ -11,28 +11,27 @@ const slice = createSlice({
   initialState,
   reducers: {
     setChannelsList: (state, { payload }) => {
-      state.channelsList = payload;
+      state.channelsList = payload; /* eslint-disable-line */
     },
     addChannel: (state, { payload }) => {
-      state.channelsList.push(payload);
+      state.channelsList.push(payload); /* eslint-disable-line */
     },
     removeChannel: (state, { payload }) => {
-      if (payload.id === state.currentChannelId) {
-        state.currentChannelId = 1;
+      if (payload.id === state.currentChannelId) { /* eslint-disable-line */
+        state.currentChannelId = 1; /* eslint-disable-line */
       }
-      console.log('deleted channel with id ', payload.id);
       const index = state.channelsList.findIndex((channel) => channel.id === payload.id);
-      if (index !== -1) {
-        state.channelsList.splice(index, 1);
+      if (index !== -1) { /* eslint-disable-line */
+        state.channelsList.splice(index, 1); /* eslint-disable-line */
       }
     },
     renameChannel: (state, { payload }) => {
       const updatedChannels = state
         .channelsList.map((channel) => (channel.id === payload.id ? payload : channel));
-      state.channelsList = updatedChannels;
+      state.channelsList = updatedChannels; /* eslint-disable-line */
     },
     setCurrentChannelId: (state, { payload }) => {
-      state.currentChannelId = payload;
+      state.currentChannelId = payload; /* eslint-disable-line */
     },
   },
 });

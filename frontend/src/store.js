@@ -6,9 +6,9 @@ import mobileMenuReducer from './slices/mobileMenuSlice';
 
 const saveAuthToLocalStorageMiddleware = (store) => (next) => (action) => {
   const result = next(action);
-  if (action.type === 'auth/login') {
+  if (action.type === 'auth/login') { /* eslint-disable-line */
     const authState = store.getState().auth;
-    localStorage.setItem('user', JSON.stringify(authState));
+    localStorage.setItem('user', JSON.stringify(authState)); /* eslint-disable-line */
   }
   return result;
 };

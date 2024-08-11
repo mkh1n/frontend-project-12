@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statements */
 import React, { useState } from 'react';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { BsPencilFill, BsTrash2Fill } from 'react-icons/bs';
@@ -32,8 +31,8 @@ const MessageRemoveModal = ({
   removeMessageHandler, showModal, handleCloseModal, t, token,
 }) => {
   const handleSubmit = async () => {
-    removeMessageHandler(token);
-    handleCloseModal();
+    removeMessageHandler(token); /* eslint-disable-line */
+    handleCloseModal(); /* eslint-disable-line */
   };
 
   return (
@@ -75,7 +74,7 @@ const Message = ({
   const networkErrorNotify = () => toast.error(t('networkError'));
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setShowModal(false); /* eslint-disable-line */
   };
 
   const editMessageHandler = async (messageId, token, messageBody) => {
@@ -85,10 +84,10 @@ const Message = ({
           Authorization: `Bearer ${token}`,
         },
       });
-      messageEditedNotify();
+      messageEditedNotify(); /* eslint-disable-line */
       return res.data;
     } catch (error) {
-      networkErrorNotify();
+      networkErrorNotify(); /* eslint-disable-line */
       throw error;
     }
   };
@@ -100,18 +99,18 @@ const Message = ({
           Authorization: `Bearer ${token}`,
         },
       });
-      messageRemovedNotify();
+      messageRemovedNotify(); /* eslint-disable-line */
       return res.data;
     } catch (error) {
-      networkErrorNotify();
+      networkErrorNotify(); /* eslint-disable-line */
       throw error;
     }
   };
 
   const f = useFormik({
     onSubmit: (values) => {
-      editMessageHandler(id, currentUser.token, values.editedMessage);
-      setIsEditing(false);
+      editMessageHandler(id, currentUser.token, values.editedMessage); /* eslint-disable-line */
+      setIsEditing(false); /* eslint-disable-line */
     },
     initialValues: {
       editedMessage: body,

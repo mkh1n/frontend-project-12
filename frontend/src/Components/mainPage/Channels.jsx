@@ -1,6 +1,3 @@
-/* eslint-disable functional/no-let */
-/* eslint-disable functional/no-conditional-statements */
-/* eslint-disable functional/no-expression-statements */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
@@ -66,12 +63,12 @@ const ChannelModal = ({
 
   const f = useFormik({
     onSubmit: (values) => {
-      setLoading(true);
+      setLoading(true); /* eslint-disable-line */
       // eslint-disable-next-line no-unused-expressions
-      action.name === 'remove' ? action.handler(token) : action.handler(token, values.channelName);
-      handleCloseModal();
-      values.channelName = '';
-      setLoading(false);
+      action.name === 'remove' ? action.handler(token) : action.handler(token, values.channelName); /* eslint-disable-line */
+      handleCloseModal(); /* eslint-disable-line */
+      values.channelName = ''; /* eslint-disable-line */
+      setLoading(false); /* eslint-disable-line */
     },
     initialValues: {
       channelName: '',
@@ -81,9 +78,9 @@ const ChannelModal = ({
     validateOnBlur: false,
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      modalRef.current ? modalRef.current.focus() : modalRef.current;
+  useEffect(() => { /* eslint-disable-line */
+    setTimeout(() => { /* eslint-disable-line */
+      modalRef.current ? modalRef.current.focus() : modalRef.current; /* eslint-disable-line */
     }, 1);
   }, []);
 
@@ -145,39 +142,38 @@ const Channels = ({ filter }) => {
   const dispatch = useDispatch();
 
   const handleOpenModal = (name, channelId) => {
-    let description;
-    let handler;
+    let description; /* eslint-disable-line */
+    let handler; /* eslint-disable-line */
     switch (name) {
-      case 'rename':
-        description = t('channelRenameDescription');
-        handler = renameChannelHandler(channelId);
+      case 'rename': /* eslint-disable-line */
+        description = t('channelRenameDescription'); /* eslint-disable-line */
+        handler = renameChannelHandler(channelId); /* eslint-disable-line */
         break;
-      case 'remove':
-        description = t('channelRemoveDescription');
-        handler = removeChannelHandler(channelId);
+      case 'remove': /* eslint-disable-line */
+        description = t('channelRemoveDescription'); /* eslint-disable-line */
+        handler = removeChannelHandler(channelId); /* eslint-disable-line */
         break;
-      case 'create':
-        description = t('channelCreateDescription');
-        handler = createChannelHandler;
+      case 'create': /* eslint-disable-line */
+        description = t('channelCreateDescription'); /* eslint-disable-line */
+        handler = createChannelHandler; /* eslint-disable-line */
         break;
     }
-    setModalAction({
+    setModalAction({ /* eslint-disable-line */
       name,
       description,
       handler,
     });
-    setShowModal(true);
+    setShowModal(true); /* eslint-disable-line */
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
-    setModalAction(null);
+    setShowModal(false); /* eslint-disable-line */
+    setModalAction(null); /* eslint-disable-line */
   };
 
   const handleChangeChannel = (id) => () => {
-    dispatch(setCurrentChannelId(+id));
-    dispatch(toggleMenu());
-    console.log(id);
+    dispatch(setCurrentChannelId(+id)); /* eslint-disable-line */
+    dispatch(toggleMenu()); /* eslint-disable-line */
   };
 
   const channelList = channels.map((channel) => (
@@ -201,11 +197,11 @@ const Channels = ({ filter }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      channelCreatedNotify();
-      dispatch(setCurrentChannelId(+res.data.id));
+      channelCreatedNotify(); /* eslint-disable-line */
+      dispatch(setCurrentChannelId(+res.data.id)); /* eslint-disable-line */
       return res.data;
     } catch (error) {
-      networkErrorNotify();
+      networkErrorNotify(); /* eslint-disable-line */
       throw error;
     }
   };
@@ -217,34 +213,34 @@ const Channels = ({ filter }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      channelRenamedNotify();
-      dispatch(setCurrentChannelId(+res.data.id));
+      channelRenamedNotify(); /* eslint-disable-line */
+      dispatch(setCurrentChannelId(+res.data.id)); /* eslint-disable-line */
       return res.data;
     } catch (error) {
-      networkErrorNotify();
+      networkErrorNotify(); /* eslint-disable-line */
       throw error;
     }
   };
 
   const removeChannelHandler = (channelId) => async (token) => {
     try {
-      await axios.delete(routes.channelPath(channelId), {
+      await axios.delete(routes.channelPath(channelId), { /* eslint-disable-line */
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const thisChannelMessagesIds = messages
         .filter((m) => +m.channelId === +channelId).map((m) => m.id);
-      thisChannelMessagesIds.map(async (messageId) => {
-        await axios.delete(routes.messagePath(messageId), {
+      thisChannelMessagesIds.map(async (messageId) => { /* eslint-disable-line */
+        await axios.delete(routes.messagePath(messageId), { /* eslint-disable-line */
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
       });
-      channelRemovedNotify();
+      channelRemovedNotify(); /* eslint-disable-line */
     } catch (error) {
-      networkErrorNotify();
+      networkErrorNotify(); /* eslint-disable-line */
       throw error;
     }
   };

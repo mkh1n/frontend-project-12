@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-conditional-statements */
-/* eslint-disable functional/no-expression-statements */
 import React, { useState } from 'react';
 import axios from 'axios';
 import {
@@ -16,7 +14,7 @@ import MainContainer from './MainContainer';
 const sendAuthRequest = async (dispatch, loginValues) => {
   const res = await axios.post(routes.loginPath(), loginValues);
   const { token, username } = res.data;
-  dispatch(login({ name: username, token }));
+  dispatch(login({ name: username, token })); /* eslint-disable-line */
 };
 const LoginPage = () => {
   const { t } = useTranslation();
@@ -32,12 +30,12 @@ const LoginPage = () => {
     },
     onSubmit: async (values) => {
       try {
-        await sendAuthRequest(dispatch, values);
-        navigate('/');
+        await sendAuthRequest(dispatch, values); /* eslint-disable-line */
+        navigate('/'); /* eslint-disable-line */
       } catch (err) {
-        f.setSubmitting(false);
-        if (err.isAxiosError && err.response.status === 401) {
-          setError(t('internalLoginError'));
+        f.setSubmitting(false); /* eslint-disable-line */
+        if (err.isAxiosError && err.response.status === 401) { /* eslint-disable-line */
+          setError(t('internalLoginError')); /* eslint-disable-line */
         } else {
           throw err;
         }

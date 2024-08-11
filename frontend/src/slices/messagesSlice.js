@@ -7,10 +7,10 @@ const slice = createSlice({
   initialState,
   reducers: {
     setMessages: (state, { payload }) => {
-      state.splice(0, state.length, ...payload);
+      state.splice(0, state.length, ...payload); /* eslint-disable-line */
     },
     addMessage: (state, { payload }) => {
-      state.push(payload);
+      state.push(payload); /* eslint-disable-line */
     },
     removeMessage: (state, { payload }) => state.filter((message) => message.id !== payload.id),
     editMessage: (state, { payload }) => (

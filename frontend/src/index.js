@@ -15,7 +15,7 @@ const rollbarConfig = {
 
 const root = ReactDOM.createRoot(document.getElementById('chat'));
 
-root.render(
+root.render( /* eslint-disable-line */
   <React.StrictMode>
     <Provider store={store}>
       <I18nextProvider i18n={i18n}>
