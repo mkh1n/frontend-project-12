@@ -19,7 +19,7 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t
     <Nav.Item className="w-100 position-relative d-flex">
       <Button
         type="button"
-        className="w-100 text-start btn channelName"
+        className="w-100 rounded-0 text-start text-truncate btn"
         variant={variant}
         id={id}
         onClick={handleClick}

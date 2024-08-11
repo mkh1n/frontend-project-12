@@ -74,23 +74,6 @@ nav {
   bottom: 55px;
 }
 
-.channelName {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-grow: 1;
-  padding-right: 15px;
-  border-radius: 10px;
-}
-
-.channelName:hover {
-  background-color: #90909033 !important;
-}
-
-.channelName.btn-secondary:hover {
-  background-color: #5b6166 !important;
-}
-
 .nav-item .dropdown {
   position: absolute;
   right: 5px;
