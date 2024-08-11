@@ -16,7 +16,6 @@ The project uses the following technologies:
 - **Bootstrap**: A framework for creating responsive and mobile-first web applications.
 - **Socket.io**: A library for implementing web sockets.
 - **i18next**: A library for internationalization and localization.
-- **Censorship** - Every swear word is censored using a special library.
 - **@hexlet/chat-server**: The server-side part of the chat.
 
 ## Demonstration
@@ -64,6 +63,7 @@ To try out the chat, you can visit the site: [Hexlet Chat](https://frontend-proj
 - **Messages:** Users can write, delete, and edit messages.
 - **Channels:** Users can create, delete, and rename channels.
 - **Emojis:** Ability to select emojis for input.
+- **Censorship** - Every swear word is censored using a special library.
 - **Responsiveness:** The site is responsive and has a mobile version.
 
 ![screenshot](./screenshot1.png)
