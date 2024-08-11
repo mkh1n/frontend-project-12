@@ -33,7 +33,7 @@ const fetchMessages = async (token, dispatch) => {
   return res.data;
 };
 
-export default function () {
+const MainPage = () => {
   const [loading, setLoading] = useState(true);
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
@@ -76,4 +76,6 @@ export default function () {
       )}
     </MainContainer>
   );
-}
+};
+
+export default MainPage;

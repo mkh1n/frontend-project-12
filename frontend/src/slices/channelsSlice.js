@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -26,7 +27,9 @@ const slice = createSlice({
       }
     },
     renameChannel: (state, { payload }) => {
-      state.channelsList = state.channelsList.map((channel) => (channel.id === payload.id ? payload : channel));
+      const updatedChannels = state
+        .channelsList.map((channel) => (channel.id === payload.id ? payload : channel));
+      state.channelsList = updatedChannels;
     },
     setCurrentChannelId: (state, { payload }) => {
       state.currentChannelId = payload;

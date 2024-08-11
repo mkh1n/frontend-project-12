@@ -1,6 +1,8 @@
+/* eslint-disable no-param-reassign */
 import { BsSend } from 'react-icons/bs';
 import { Form, Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Picker from 'emoji-picker-react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +22,7 @@ const postMessage = async (token, newMessage) => {
   return res.data;
 };
 
-export default function () {
+const MessageForm = () => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const currentChannelId = useSelector(selectCurrentChannelId);
@@ -31,6 +33,7 @@ export default function () {
   const [isMobileKeyboard, setIsMobileKeyboard] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if ('virtualKeyboard' in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
@@ -61,13 +64,11 @@ export default function () {
     return () => {
       window.removeEventListener('resize', updateBodyHeight);
     };
-  }, [keyboardHeight]);
+  }, [bodyEl.style, keyboardHeight]);
 
   const f = useFormik({
     onSubmit: (values) => {
-      if (values.messageText === '') {
-
-      } else {
+      if (values.messageText === '') { /* empty */ } else {
         setIsSending(true);
         const newMessage = {
           body: values.messageText,
@@ -107,9 +108,9 @@ export default function () {
 
   const handleChange = (event) => {
     if (!isSending) {
-      let { value } = event.target;
-      value = value.replace(/^\s+/, '');
-      f.setFieldValue('messageText', value);
+      const { value } = event.target;
+      const updatedValue = value.replace(/^\s+/, '');
+      f.setFieldValue('messageText', updatedValue);
     } else {
       f.setFieldValue('');
     }
@@ -126,6 +127,7 @@ export default function () {
     f.handleSubmit(e);
   };
 
+  // eslint-disable-next-line consistent-return
   const onKeyDown = (event) => {
     if (event.shiftKey && event.key === 'Enter') {
       event.preventDefault();
@@ -156,7 +158,7 @@ export default function () {
           {isEmojiPickerOpen && (
             <Picker
               id="emojiPicker"
-              onEmojiClick={(emojiObject, e) => {
+              onEmojiClick={(emojiObject) => {
                 f.setFieldValue('messageText', f.values.messageText + emojiObject.emoji);
               }}
             />
@@ -187,4 +189,6 @@ export default function () {
       </Form>
     </div>
   );
-}
+};
+
+export default MessageForm;

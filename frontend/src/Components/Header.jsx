@@ -21,7 +21,7 @@ const BurgerButton = ({ isMenuOpen, onClick, ref }) => (
     <span />
   </Button>
 );
-export default function () {
+const Header = () => {
   const { t } = useTranslation();
   const mobileMenuRef = useRef(null);
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ export default function () {
     return () => {
       document.removeEventListener('mousedown', listener);
     };
-  }, [isMenuOpen]);
+  }, [dispatch, isMenuOpen]);
 
   return (
     <Navbar bg="light" data-bs-theme="light" style={{ position: 'sticky' }}>
@@ -74,4 +74,6 @@ export default function () {
       </Container>
     </Navbar>
   );
-}
+};
+
+export default Header;

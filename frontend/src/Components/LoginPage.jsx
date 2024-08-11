@@ -16,7 +16,7 @@ const sendAuthRequest = async (dispatch, loginValues) => {
   const { token, username } = res.data;
   dispatch(login({ name: username, token }));
 };
-export default function () {
+const LoginPage = () => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
@@ -80,4 +80,6 @@ export default function () {
       </Row>
     </MainContainer>
   );
-}
+};
+
+export default LoginPage;

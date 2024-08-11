@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import MainContainer from './MainContainer';
 
-export default function () {
+const ErrorPage = () => {
   const { t } = useTranslation();
   return (
     <MainContainer>
@@ -17,4 +17,6 @@ export default function () {
       </Row>
     </MainContainer>
   );
-}
+};
+
+export default ErrorPage;

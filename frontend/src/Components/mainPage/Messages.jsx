@@ -8,7 +8,7 @@ import MessagesHeader from './MessagesHeader';
 import { selectMessages } from '../../slices/messagesSlice';
 import { selectCurrentChannelId } from '../../slices/channelsSlice';
 
-export default function ({ filter }) {
+const Messages = ({ filter }) => {
   const messages = useSelector(selectMessages);
   const currentChannelId = useSelector(selectCurrentChannelId);
   const container = useRef(null);
@@ -79,4 +79,6 @@ export default function ({ filter }) {
       </div>
     </Col>
   );
-}
+};
+
+export default Messages;

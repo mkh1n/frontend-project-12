@@ -1,3 +1,9 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
+/* eslint-disable default-case */
+/* eslint-disable functional/no-let */
+/* eslint-disable functional/no-expression-statement */
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Nav, Button, Col, Modal, Form, Dropdown,
@@ -60,7 +66,8 @@ const ChannelModal = ({
   const f = useFormik({
     onSubmit: (values) => {
       setLoading(true);
-      action.name == 'remove' ? action.handler(token) : action.handler(token, values.channelName);
+      // eslint-disable-next-line no-unused-expressions
+      action.name === 'remove' ? action.handler(token) : action.handler(token, values.channelName);
       handleCloseModal();
       values.channelName = '';
       setLoading(false);
@@ -85,7 +92,7 @@ const ChannelModal = ({
         <Modal.Title>{action.description}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {action.name == 'remove' ? (
+        {action.name === 'remove' ? (
           t('channelRemoveConfirmation'))
           : (
             <Form onSubmit={f.handleSubmit}>
@@ -119,7 +126,7 @@ const ChannelModal = ({
   );
 };
 
-export default function ({ filter }) {
+const Channels = ({ filter }) => {
   const messages = useSelector(selectMessages);
   const channels = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
@@ -176,7 +183,7 @@ export default function ({ filter }) {
     <Channel
       key={channel.id}
       name={channel.name}
-      variant={currentChennelId == channel.id ? 'secondary' : ''}
+      variant={+currentChennelId === +channel.id ? 'secondary' : ''}
       handleClick={handleChangeChannel(channel.id)}
       removable={channel.removable}
       id={channel.id}
@@ -225,7 +232,8 @@ export default function ({ filter }) {
           Authorization: `Bearer ${token}`,
         },
       });
-      const thisChannelMessagesIds = messages.filter((m) => m.channelId == channelId).map((m) => m.id);
+      const thisChannelMessagesIds = messages
+        .filter((m) => +m.channelId === +channelId).map((m) => m.id);
       thisChannelMessagesIds.map(async (messageId) => {
         await axios.delete(routes.messagePath(messageId), {
           headers: {
@@ -269,4 +277,6 @@ export default function ({ filter }) {
       )}
     </Col>
   );
-}
+};
+
+export default Channels;

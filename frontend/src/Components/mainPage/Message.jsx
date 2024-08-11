@@ -55,9 +55,9 @@ const MessageRemoveModal = ({
   );
 };
 
-export default function ({
+const Message = ({
   username, body, id, filter,
-}) {
+}) => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
   const isMessageMine = username === currentUser.name;
@@ -65,6 +65,7 @@ export default function ({
   const [isEditing, setIsEditing] = useState(false);
 
   const lines = body.split('\n').map((line, index) => (
+    // eslint-disable-next-line react/no-array-index-key
     <div key={index}><Anchorme target="_blank">{filter.clean(line)}</Anchorme></div>
   ));
 
@@ -76,9 +77,9 @@ export default function ({
     setShowModal(false);
   };
 
-  const editMessageHandler = async (id, token, body) => {
+  const editMessageHandler = async (messageId, token, messageBody) => {
     try {
-      const res = await axios.patch(routes.messagePath(id), { body }, {
+      const res = await axios.patch(routes.messagePath(messageId), { messageBody }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -91,9 +92,9 @@ export default function ({
     }
   };
 
-  const removeMessageHandler = (id) => async (token) => {
+  const removeMessageHandler = (messageId) => async (token) => {
     try {
-      const res = await axios.delete(routes.messagePath(id), {
+      const res = await axios.delete(routes.messagePath(messageId), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -169,4 +170,6 @@ export default function ({
       />
     </div>
   );
-}
+};
+
+export default Message;

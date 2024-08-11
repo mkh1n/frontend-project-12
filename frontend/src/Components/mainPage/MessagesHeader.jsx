@@ -4,15 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { selectCurrentChannelId, selectChannels } from '../../slices/channelsSlice';
 import { selectMessages } from '../../slices/messagesSlice';
 
-export default function MessageHeader({ filter }) {
+const MessageHeader = ({ filter }) => {
   const channelsList = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
   const messages = useSelector(selectMessages);
   const { t } = useTranslation();
 
-  const currentChennel = channelsList.find((c) => c.id === currentChennelId);
-  const currentChannelMessages = messages.filter((message) => message.channelId === currentChennelId);
-
+  const currentChennel = channelsList.find((c) => +c.id === +currentChennelId);
+  const currentChannelMessages = messages
+    .filter((message) => message.channelId === currentChennelId);
+  console.log(currentChennel, currentChennelId, channelsList);
   return (
     <div className="bg-light p-3 shadow-sm small" style={{ position: 'sticky' }}>
       <p className="m-0">
@@ -26,4 +27,6 @@ export default function MessageHeader({ filter }) {
       </span>
     </div>
   );
-}
+};
+
+export default MessageHeader;

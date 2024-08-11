@@ -18,7 +18,7 @@ const sendAuthRequest = async (dispatch, loginValues) => {
   dispatch(login({ name: username, token }));
 };
 
-export default function () {
+const SignupPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -132,4 +132,6 @@ export default function () {
       </Row>
     </MainContainer>
   );
-}
+};
+
+export default SignupPage;
