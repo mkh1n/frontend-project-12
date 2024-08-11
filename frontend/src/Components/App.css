@@ -91,26 +91,13 @@ nav {
   background-color: #5b6166 !important;
 }
 
-.channelName:hover+.dropdown,
-.dropdown.show {
-  display: unset !important;
-}
-
-.channelName.btn-secondary+.dropdown,
-.dropdown:hover {
-  display: unset !important;
-}
-
-.nav-item .dropdown-toggle {
-  color: #c7c7c7 !important;
-  padding: 5px;
-}
-
 .nav-item .dropdown {
   position: absolute;
-  display: none;
   right: 5px;
   top: 3px;
+}
+.dropdown-toggle{
+  color: #6c757d;
 }
 
 #messages-box {
