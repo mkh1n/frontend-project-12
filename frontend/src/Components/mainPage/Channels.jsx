@@ -1,9 +1,10 @@
+/* eslint-disable functional/no-let */
+/* eslint-disable functional/no-conditional-statements */
+/* eslint-disable functional/no-expression-statements */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
 /* eslint-disable default-case */
-/* eslint-disable functional/no-let */
-/* eslint-disable functional/no-expression-statement */
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Nav, Button, Col, Modal, Form, Dropdown,

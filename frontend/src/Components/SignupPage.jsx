@@ -1,3 +1,5 @@
+/* eslint-disable functional/no-conditional-statements */
+/* eslint-disable functional/no-expression-statements */
 import React, { useState } from 'react';
 import axios from 'axios';
 import {

@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-expression-statements */
 import React, { useState } from 'react';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { BsPencilFill, BsTrash2Fill } from 'react-icons/bs';

@@ -13,7 +13,6 @@ const MessageHeader = ({ filter }) => {
   const currentChennel = channelsList.find((c) => +c.id === +currentChennelId);
   const currentChannelMessages = messages
     .filter((message) => message.channelId === currentChennelId);
-  console.log(currentChennel, currentChennelId, channelsList);
   return (
     <div className="bg-light p-3 shadow-sm small" style={{ position: 'sticky' }}>
       <p className="m-0">

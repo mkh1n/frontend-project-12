@@ -1,3 +1,5 @@
+/* eslint-disable functional/no-conditional-statements */
+/* eslint-disable functional/no-expression-statements */
 /* eslint-disable no-param-reassign */
 import { BsSend } from 'react-icons/bs';
 import { Form, Button } from 'react-bootstrap';
