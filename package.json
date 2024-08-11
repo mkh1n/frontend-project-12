@@ -9,6 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build --prefix frontend",
+    "lint": "npm run lint --prefix frontend",
+    "lint:fix": "npm run lint-fix --prefix frontend",
     "eject": "npm run eject --prefix frontend",
     "start": "npx start-server -s ./frontend/build"
   },

@@ -1,49 +1,52 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Nav, Button, Col, Modal, Form, Dropdown } from "react-bootstrap";
-import { BsPlus } from "react-icons/bs";
-import { selectChannels, selectCurrentChannelId, setCurrentChannelId } from "../../slices/channelsSlice";
-import axios from "axios";
-import routes from "../../routes";
-import { useFormik } from "formik";
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Nav, Button, Col, Modal, Form, Dropdown,
+} from 'react-bootstrap';
+import { BsPlus } from 'react-icons/bs';
+import axios from 'axios';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useEffect, useRef, useState } from "react";
-import { selectCurrentUser } from "../../slices/authSlice";
-import { selectMessages } from "../../slices/messagesSlice";
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { selectMobileMenuState, toggleMenu} from "../../slices/mobileMenuSlice";
 import { toast } from 'react-toastify';
+import { selectCurrentUser } from '../../slices/authSlice';
+import { selectMessages } from '../../slices/messagesSlice';
+import { selectMobileMenuState, toggleMenu } from '../../slices/mobileMenuSlice';
+import routes from '../../routes';
+import { selectChannels, selectCurrentChannelId, setCurrentChannelId } from '../../slices/channelsSlice';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t, filter}) => {
-  return (
-    <Nav.Item className="w-100 position-relative d-flex">
-      <Button
-        type="button"
-        className="w-100 rounded-0 text-start text-truncate"
-        variant={variant}
-        id={id}
-        onClick={handleClick}
-      >
-        <span className="me-1">#</span>{filter.clean(name)}
-      </Button>
-      {removable && (
-        <>
-        <Dropdown>
-          <Dropdown.Toggle as={Button} variant="link" >
-          <span class="visually-hidden">{t('channelManagement')}</span>
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => handleOpenModal('rename', id)}>{t('rename')}</Dropdown.Item>
-            <Dropdown.Item onClick={() => handleOpenModal('remove', id)}>{t('remove')}</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        </>
-      )}
-    </Nav.Item>
-  )
-}
+const Channel = ({
+  name, variant, handleClick, removable, id, handleOpenModal, t, filter,
+}) => (
+  <Nav.Item className="w-100 position-relative d-flex">
+    <Button
+      type="button"
+      className="w-100 rounded-0 text-start text-truncate"
+      variant={variant}
+      id={id}
+      onClick={handleClick}
+    >
+      <span className="me-1">#</span>
+      {filter.clean(name)}
+    </Button>
+    {removable && (
+    <Dropdown>
+      <Dropdown.Toggle as={Button} variant="link">
+        <span className="visually-hidden">{t('channelManagement')}</span>
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item onClick={() => handleOpenModal('rename', id)}>{t('rename')}</Dropdown.Item>
+        <Dropdown.Item onClick={() => handleOpenModal('remove', id)}>{t('remove')}</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+    )}
+  </Nav.Item>
+);
 
-const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, token }) => {
+const ChannelModal = ({
+  action, showModal, handleCloseModal, channelsNames, t, token,
+}) => {
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
   const validationSchema = Yup.object().shape({
@@ -55,9 +58,9 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
   });
 
   const f = useFormik({
-    onSubmit: values => {
+    onSubmit: (values) => {
       setLoading(true);
-      action.name == 'remove' ? action.handler(token) : action.handler(token, values.channelName)
+      action.name == 'remove' ? action.handler(token) : action.handler(token, values.channelName);
       handleCloseModal();
       values.channelName = '';
       setLoading(false);
@@ -73,7 +76,7 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
   useEffect(() => {
     setTimeout(() => {
       modalRef.current ? modalRef.current.focus() : modalRef.current;
-    }, 1)
+    }, 1);
   }, []);
 
   return (
@@ -97,18 +100,18 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
                   isInvalid={!!f.errors.channelName}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {f.errors.channelName ? f.errors.channelName : ""}
+                  {f.errors.channelName ? f.errors.channelName : ''}
                 </Form.Control.Feedback>
               </Form.Group>
-            </Form>)
-        }
+            </Form>
+          )}
       </Modal.Body>
 
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>
           {t('cancel')}
         </Button>
-        <Button variant={action.name === 'remove' ? "danger" : 'primary'} onClick={f.handleSubmit} disabled={loading} type="submit">
+        <Button variant={action.name === 'remove' ? 'danger' : 'primary'} onClick={f.handleSubmit} disabled={loading} type="submit">
           {t(action.name === 'remove' ? 'remove' : 'send')}
         </Button>
       </Modal.Footer>
@@ -116,12 +119,12 @@ const ChannelModal = ({ action, showModal, handleCloseModal, channelsNames, t, t
   );
 };
 
-export default ({filter}) => {
+export default function ({ filter }) {
   const messages = useSelector(selectMessages);
   const channels = useSelector(selectChannels);
   const currentChennelId = useSelector(selectCurrentChannelId);
   const currentUser = useSelector(selectCurrentUser);
-  const isMenuOpen = useSelector(selectMobileMenuState)
+  const isMenuOpen = useSelector(selectMobileMenuState);
 
   const channelCreatedNotify = () => toast.success(t('channelCreated'));
   const channelRemovedNotify = () => toast.success(t('channelRemoved'));
@@ -163,36 +166,36 @@ export default ({filter}) => {
     setModalAction(null);
   };
 
-
   const handleChangeChannel = (id) => () => {
     dispatch(setCurrentChannelId(+id));
     dispatch(toggleMenu());
-    console.log(id)
+    console.log(id);
   };
 
-  const channelList = channels.map((channel) => <Channel
-    key={channel.id}
-    name={channel.name}
-    variant={currentChennelId == channel.id ? 'secondary' : ''}
-    handleClick={handleChangeChannel(channel.id)}
-    removable={channel.removable}
-    id={channel.id}
-    handleOpenModal={handleOpenModal}
-    t={t}
-    filter={filter}
-  />
-  );
+  const channelList = channels.map((channel) => (
+    <Channel
+      key={channel.id}
+      name={channel.name}
+      variant={currentChennelId == channel.id ? 'secondary' : ''}
+      handleClick={handleChangeChannel(channel.id)}
+      removable={channel.removable}
+      id={channel.id}
+      handleOpenModal={handleOpenModal}
+      t={t}
+      filter={filter}
+    />
+  ));
 
   const createChannelHandler = async (token, name) => {
-    try{
+    try {
       const res = await axios.post(routes.channelsPath(), { name }, {
         headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
-      channelCreatedNotify()
+      channelCreatedNotify();
       dispatch(setCurrentChannelId(+res.data.id));
-      return res.data
+      return res.data;
     } catch (error) {
       networkErrorNotify();
       throw error;
@@ -204,11 +207,11 @@ export default ({filter}) => {
       const res = await axios.patch(routes.channelPath(channelId), { name }, {
         headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
       channelRenamedNotify();
       dispatch(setCurrentChannelId(+res.data.id));
-      return res.data
+      return res.data;
     } catch (error) {
       networkErrorNotify();
       throw error;
@@ -216,33 +219,34 @@ export default ({filter}) => {
   };
 
   const removeChannelHandler = (channelId) => async (token) => {
-    try{
+    try {
       await axios.delete(routes.channelPath(channelId), {
         headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
-      const thisChannelMessagesIds = messages.filter((m) => m.channelId == channelId).map(m => m.id)
+      const thisChannelMessagesIds = messages.filter((m) => m.channelId == channelId).map((m) => m.id);
       thisChannelMessagesIds.map(async (messageId) => {
         await axios.delete(routes.messagePath(messageId), {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         });
       });
-      channelRemovedNotify()
-    } catch (error){
+      channelRemovedNotify();
+    } catch (error) {
       networkErrorNotify();
       throw error;
     }
   };
 
   return (
-    <Col 
-      xs={4} 
-      md={3} 
-      className={"border-end px-0 bg-light d-flex flex-column h-100" + (isMenuOpen ? ' open' : '')} 
-      id="channelsHolder">
+    <Col
+      xs={4}
+      md={3}
+      className={`border-end px-0 bg-light d-flex flex-column h-100${isMenuOpen ? ' open' : ''}`}
+      id="channelsHolder"
+    >
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4 align-items-center">
         <b>{t('channels')}</b>
         <Button type="button" className="p-0 text-primary btn-group-vertical" variant="outline-primary" onClick={() => handleOpenModal('create')}>
@@ -258,11 +262,11 @@ export default ({filter}) => {
           action={modalAction}
           showModal={showModal}
           handleCloseModal={handleCloseModal}
-          channelsNames={channels.map((c => c.name))}
+          channelsNames={channels.map(((c) => c.name))}
           t={t}
           token={currentUser.token}
         />
       )}
     </Col>
   );
-};
+}

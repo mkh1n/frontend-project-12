@@ -1,17 +1,17 @@
-import MessagesHeader from "./MessagesHeader";
-import MessagesForm from "./MessagesForm";
-import Message from "./Message";
-import { BsArrowDownShort } from "react-icons/bs";
-import { Col, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { useRef, useEffect } from "react";
-import { selectMessages } from "../../slices/messagesSlice";
-import { selectCurrentChannelId } from "../../slices/channelsSlice";
+import { BsArrowDownShort } from 'react-icons/bs';
+import { Col, Button } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { useRef, useEffect } from 'react';
+import Message from './Message';
+import MessagesForm from './MessagesForm';
+import MessagesHeader from './MessagesHeader';
+import { selectMessages } from '../../slices/messagesSlice';
+import { selectCurrentChannelId } from '../../slices/channelsSlice';
 
-export default ({ filter }) => {
+export default function ({ filter }) {
   const messages = useSelector(selectMessages);
   const currentChannelId = useSelector(selectCurrentChannelId);
-  const container = useRef(null)
+  const container = useRef(null);
   const bottomRef = useRef(null);
   const scrollBottomRef = useRef(null);
 
@@ -25,33 +25,34 @@ export default ({ filter }) => {
   };
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleScroll = () => {
     const { scrollTop } = container.current;
     if (scrollTop >= -200) {
-      scrollBottomRef.current.style.display = "none";
+      scrollBottomRef.current.style.display = 'none';
     } else {
-      scrollBottomRef.current.style.display = "flex";
+      scrollBottomRef.current.style.display = 'flex';
     }
   };
   useEffect(() => {
-    Scroll()
+    Scroll();
   }, [currentChannelMessages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView();
   }, [currentChannelId]);
 
-  const messagesList = currentChannelMessages.map((message) => (<Message
-    username={message.username}
-    body={message.body}
-    id={message.id}
-    key={message.id}
-    filter={filter}
-  />)
-  );
+  const messagesList = currentChannelMessages.map((message) => (
+    <Message
+      username={message.username}
+      body={message.body}
+      id={message.id}
+      key={message.id}
+      filter={filter}
+    />
+  ));
   messagesList.reverse();
 
   return (
@@ -63,13 +64,14 @@ export default ({ filter }) => {
           <div
             ref={bottomRef}
             style={{ position: 'absolute' }}
-          ></div>
+          />
           <Button
             variant="secondary"
             className="rounded-5 btn-floating btn-lg"
             id="scrollDownButton"
             ref={scrollBottomRef}
-            onClick={scrollToBottom}>
+            onClick={scrollToBottom}
+          >
             <BsArrowDownShort />
           </Button>
         </div>
@@ -77,4 +79,4 @@ export default ({ filter }) => {
       </div>
     </Col>
   );
-};
+}

@@ -36,7 +36,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "npx eslint --ext js,jsx --config .eslintrc.yml .",
+    "lint-fix": "npx eslint --ext js,jsx --config .eslintrc.yml . --fix"
   },
   "browserslist": {
     "production": [
@@ -51,12 +52,12 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.23.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-functional": "^4.2.2",
+    "eslint-plugin-functional": "^4.4.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-react": "^7.31.1",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2"
   }
 }
