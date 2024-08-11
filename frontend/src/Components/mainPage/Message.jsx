@@ -60,7 +60,7 @@ export default function ({
 }) {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
-  const isMessageMine = username == currentUser.name;
+  const isMessageMine = username === currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -155,7 +155,7 @@ export default function ({
             <div className="innerMessage">
               {lines}
             </div>
-            {isMessageMine || currentUser.name == 'admin'
+            {isMessageMine || currentUser.name === 'admin'
               ? <MessageOtions isMessageMine={isMessageMine} setIsEditing={setIsEditing} setShowModal={setShowModal} /> : ''}
           </>
         )}

@@ -36,8 +36,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "npx eslint --ext js,jsx --config .eslintrc.yml .",
-    "lint-fix": "npx eslint --ext js,jsx --config .eslintrc.yml . --fix"
+    "lint": "npx eslint --ext js,jsx --no-eslintrc --config .eslintrc.yml .",
+    "lint-fix": "npx eslint --ext js,jsx  --no-eslintrc --config .eslintrc.yml . --fix"
   },
   "browserslist": {
     "production": [
