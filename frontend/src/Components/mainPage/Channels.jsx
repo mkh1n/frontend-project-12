@@ -1,16 +1,16 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Nav, Button, Col, Modal, Form, Dropdown } from 'react-bootstrap';
-import { BsPlus } from 'react-icons/bs';
-import { selectChannels, selectCurrentChannelId, setCurrentChannelId } from '../../slices/channelsSlice';
-import axios from 'axios';
-import routes from '../../routes';
-import { useFormik } from 'formik';
+import { useDispatch, useSelector } from "react-redux";
+import { Nav, Button, Col, Modal, Form, Dropdown } from "react-bootstrap";
+import { BsPlus } from "react-icons/bs";
+import { selectChannels, selectCurrentChannelId, setCurrentChannelId } from "../../slices/channelsSlice";
+import axios from "axios";
+import routes from "../../routes";
+import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { useEffect, useRef, useState } from 'react';
-import { selectCurrentUser } from '../../slices/authSlice';
-import { selectMessages } from '../../slices/messagesSlice';
+import { useEffect, useRef, useState } from "react";
+import { selectCurrentUser } from "../../slices/authSlice";
+import { selectMessages } from "../../slices/messagesSlice";
 import { useTranslation } from 'react-i18next';
-import { selectMobileMenuState, toggleMenu} from '../../slices/mobileMenuSlice';
+import { selectMobileMenuState, toggleMenu} from "../../slices/mobileMenuSlice";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -30,7 +30,7 @@ const Channel = ({ name, variant, handleClick, removable, id, handleOpenModal, t
         <>
         <Dropdown>
           <Dropdown.Toggle as={Button} variant="link" >
-          <span className="visually-hidden">{t('channelManagement')}</span>
+          <span class="visually-hidden">{t('channelManagement')}</span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => handleOpenModal('rename', id)}>{t('rename')}</Dropdown.Item>

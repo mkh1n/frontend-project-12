@@ -1,28 +1,24 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { selectCurrentChannelId, selectChannels } from '../../slices/channelsSlice';
-import { selectMessages } from '../../slices/messagesSlice';
+import { useSelector } from "react-redux";
+import { selectCurrentChannelId, selectChannels } from "../../slices/channelsSlice";
+import { selectMessages } from "../../slices/messagesSlice";
+import { useTranslation } from "react-i18next";
 
-const MessageHeader = ({ filter }) => {
+export default function MessageHeader({filter}) {
   const channelsList = useSelector(selectChannels);
-  const currentChannelId = useSelector(selectCurrentChannelId);
+  const currentChennelId = useSelector(selectCurrentChannelId);
   const messages = useSelector(selectMessages);
   const { t } = useTranslation();
 
-  const currentChannel = channelsList.find((c) => c.id === currentChannelId);
-  const currentChannelMessages = messages.filter((message) => message.channelId === currentChannelId);
+  const currentChennel = channelsList.find((c) => c.id == currentChennelId);
+  const currentChannelMessages = messages.filter((message) => message.channelId == currentChennelId);
 
   return (
-    <div className='bg-light p-3 shadow-sm small' style={{ position: 'sticky' }}>
-      <p className='m-0'>
-        <b># {filter.clean(currentChannel.name)}</b>
-      </p>
-      <span className='text-muted'>
+    <div className="bg-light p-3 shadow-sm small" style={{position:"sticky"}}>
+      <p className="m-0"><b># {filter.clean(currentChennel.name)}</b></p>
+      <span className="text-muted">
         {t('messagesWithCount', { count: currentChannelMessages.length })}
       </span>
     </div>
   );
-};
-
-export default MessageHeader;
+}

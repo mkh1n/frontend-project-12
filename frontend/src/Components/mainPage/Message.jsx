@@ -8,33 +8,30 @@ import { selectCurrentUser } from '../../slices/authSlice';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { Anchorme } from 'react-anchorme';
+import { Anchorme } from 'react-anchorme'
 import TextareaAutosize from 'react-textarea-autosize';
 
-const MessageOptions = ({ isMessageMine, setIsEditing, setShowModal }) => {
-  return (
-    <div className={`messageOptionsHandler${isMessageMine ? ' leftOptions' : ' rightOptions'}`}>
-      <BsPencilFill
-        size={18}
-        id='editMessageIcon'
-        className='messageOption'
-        onClick={() => setIsEditing(true)}
-      />
-      <BsTrash2Fill
-        size={18}
-        id='deleteMessageIcon'
-        className='messageOption'
-        onClick={() => setShowModal(true)}
-      />
-    </div>
-  );
-};
-
+const MessageOtions = ({isMessageMine, setIsEditing, setShowModal}) => {
+  return <div className={"messageOptionsHandler" + (isMessageMine ? ' leftOptions' : ' rightOptions')}>
+    <BsPencilFill
+      size={18}
+      id='editMessageIcon'
+      className='messageOption'
+      onClick={() => setIsEditing(true)}
+    />
+    <BsTrash2Fill
+      size={18}
+      id='deleteMessageIcon'
+      className='messageOption'
+      onClick={() => setShowModal(true)}
+    />
+  </div>
+}
 const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal, t, token }) => {
   const handleSubmit = async () => {
     removeMessageHandler(token);
     handleCloseModal();
-  };
+  }
 
   return (
     <Modal show={showModal} onHide={handleCloseModal} centered>
@@ -45,10 +42,10 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
         {t('messageRemoveConfirmation')}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' onClick={handleCloseModal}>
+        <Button variant="secondary" onClick={handleCloseModal}>
           {t('cancel')}
         </Button>
-        <Button variant='danger' onClick={handleSubmit}>
+        <Button variant="danger" onClick={handleSubmit}>
           {t('remove')}
         </Button>
       </Modal.Footer>
@@ -56,18 +53,17 @@ const MessageRemoveModal = ({ removeMessageHandler, showModal, handleCloseModal,
   );
 };
 
-const MessageComponent = ({ username, body, id, filter }) => {
+export default ({ username, body, id, filter }) => {
   const { t } = useTranslation();
   const currentUser = useSelector(selectCurrentUser);
-  const isMessageMine = username === currentUser.name;
+  const isMessageMine = username == currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
+  
   const lines = body.split('\n').map((line, index) => (
-    <div key={index}>
-      <Anchorme target='_blank'>{filter.clean(line)}</Anchorme>
-    </div>
+    <div key={index}><Anchorme target="_blank">{filter.clean(line)}</Anchorme></div>
   ));
+  
 
   const messageRemovedNotify = () => toast.success(t('messageRemoved'));
   const messageEditedNotify = () => toast.success(t('messageEdited'));
@@ -77,12 +73,12 @@ const MessageComponent = ({ username, body, id, filter }) => {
     setShowModal(false);
   };
 
-  const editMessageHandler = async (messageId, token, newBody) => {
+  const editMessageHandler = async (id, token, body) => {
     try {
-      const res = await axios.patch(routes.messagePath(messageId), { body: newBody }, {
+      const res = await axios.patch(routes.messagePath(id), { body }, {
         headers: {
           Authorization: `Bearer ${token}`,
-        },
+        }
       });
       messageEditedNotify();
       return res.data;
@@ -92,9 +88,9 @@ const MessageComponent = ({ username, body, id, filter }) => {
     }
   };
 
-  const removeMessageHandler = (messageId) => async (token) => {
+  const removeMessageHandler = (id) => async (token) => {
     try {
-      const res = await axios.delete(routes.messagePath(messageId), {
+      const res = await axios.delete(routes.messagePath(id), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -108,7 +104,7 @@ const MessageComponent = ({ username, body, id, filter }) => {
   };
 
   const f = useFormik({
-    onSubmit: (values) => {
+    onSubmit: values => {
       editMessageHandler(id, currentUser.token, values.editedMessage);
       setIsEditing(false);
     },
@@ -116,65 +112,59 @@ const MessageComponent = ({ username, body, id, filter }) => {
       editedMessage: body,
     },
   });
-
   return (
-    <div
-      className={`d-flex justify-content-between align-items-end text-break message${
-        isEditing ? ' editing' : ''
-      }${isMessageMine ? ' fromMe' : ''}`}
-    >
-      {isEditing ? (
-        <Form onSubmit={f.handleSubmit}>
-          <Form.Group controlId='channelName'>
-            <Form.Label className='visually-hidden'>{t('newMessage')}</Form.Label>
-            <TextareaAutosize
-              type='text'
-              placeholder={t('editedMessage')}
-              className='mb-2'
-              value={f.values.editedMessage}
-              onChange={f.handleChange}
-              name='editedMessage'
-              style={{ resize: 'none', borderRadius: '10px', border: 'none' }}
-            />
-          </Form.Group>
-          <Button variant='secondary' onClick={() => setIsEditing(false)}>
-            {t('cancel')}
-          </Button>
-          <Button
-            variant='primary'
-            onClick={f.handleSubmit}
-            disabled={f.values.editedMessage.length === 0}
-          >
-            {t('send')}
-          </Button>
-        </Form>
-      ) : (
-        <>
-          <div className='usernameBlock'>
+    <div className={"d-flex justify-content-between align-items-end text-break message"
+      + (isEditing ? ' editing' : '')
+      + (isMessageMine ? ' fromMe' : '')}>
+      {isEditing ?
+        (<>
+          <Form onSubmit={f.handleSubmit}>
+            <Form.Group controlId="channelName">
+              <Form.Label className="visually-hidden">{t('newMessage')}</Form.Label>
+              <TextareaAutosize
+                type="text"
+                placeholder={t('editedMessage')}
+                className='mb-2'
+                value={f.values.editedMessage}
+                onChange={f.handleChange}
+                name="editedMessage"
+                style={{ resize: 'none' , borderRadius: "10px", border: "none"}}
+              />
+            </Form.Group>
+            <Button variant="secondary" onClick={() => setIsEditing(false)}>
+              {t('cancel')}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={f.handleSubmit}
+              disabled={f.values.editedMessage.length === 0}>
+              {t('send')}
+            </Button>
+          </Form>
+        </>)
+        :
+        (<>
+          <div className="usernameBlock">
             {isMessageMine ? t('your') : username}
           </div>
           <div className='innerMessage'>
             {lines}
           </div>
-          {(isMessageMine || currentUser.name === 'admin') && (
-            <MessageOptions
-              isMessageMine={isMessageMine}
-              setIsEditing={setIsEditing}
-              setShowModal={setShowModal}
-            />
-          )}
-        </>
-      )}
+          {isMessageMine || currentUser.name == 'admin' 
+          ?
+        <MessageOtions isMessageMine={isMessageMine} setIsEditing={setIsEditing} setShowModal={setShowModal}/>:''}
+        </>)
+      }
 
-      <MessageRemoveModal
-        removeMessageHandler={removeMessageHandler(id)}
-        showModal={showModal}
-        handleCloseModal={handleCloseModal}
-        t={t}
-        token={currentUser.token}
-      />
+      {
+        <MessageRemoveModal
+          removeMessageHandler={removeMessageHandler(id)}
+          showModal={showModal}
+          handleCloseModal={handleCloseModal}
+          t={t}
+          token={currentUser.token}
+        />
+      }
     </div>
   );
 };
-
-export default MessageComponent;
