@@ -4,30 +4,32 @@ const initialState = {
   channelsList: [],
   currentChannelId: 1,
 };
+
 const slice = createSlice({
   name: 'channels',
   initialState,
   reducers: {
     setChannelsList: (state, { payload }) => {
       state.channelsList = payload;
-      return state;
     },
     addChannel: (state, { payload }) => {
       state.channelsList.push(payload);
     },
     removeChannel: (state, { payload }) => {
-      if (payload.id == state.currentChannelId) {
+      if (payload.id === state.currentChannelId) {
         state.currentChannelId = 1;
       }
       console.log('deleted channel with id ', payload.id);
-      state.channelsList.splice(state.channelsList.findIndex((channel) => channel.id === payload.id), 1);
+      const index = state.channelsList.findIndex((channel) => channel.id === payload.id);
+      if (index !== -1) {
+        state.channelsList.splice(index, 1);
+      }
     },
     renameChannel: (state, { payload }) => {
-      state.channelsList = state.channelsList.map((channel) => (channel.id == payload.id ? payload : channel));
+      state.channelsList = state.channelsList.map((channel) => (channel.id === payload.id ? payload : channel));
     },
     setCurrentChannelId: (state, { payload }) => {
       state.currentChannelId = payload;
-      return state;
     },
   },
 });

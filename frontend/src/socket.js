@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 import { addMessage, editMessage, removeMessage } from './slices/messagesSlice';
-import { store } from './store';
+import store from './store';
 
 let socket;
 let isSubscribed = false;

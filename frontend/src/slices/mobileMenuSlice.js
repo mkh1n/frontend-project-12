@@ -4,10 +4,7 @@ const slice = createSlice({
   name: 'mobileMenu',
   initialState: false,
   reducers: {
-    toggleMenu: (state) => {
-      state = !state;
-      return state;
-    },
+    toggleMenu: (state) => !state,
   },
 });
 

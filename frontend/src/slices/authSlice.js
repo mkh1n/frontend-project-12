@@ -15,7 +15,6 @@ const slice = createSlice({
     login: (state, { payload: { name, token } }) => {
       state.name = name;
       state.token = token;
-      return state;
     },
     logout: () => {
       localStorage.clear();

@@ -13,7 +13,9 @@ const slice = createSlice({
       state.push(payload);
     },
     removeMessage: (state, { payload }) => state.filter((message) => message.id !== payload.id),
-    editMessage: (state, { payload }) => state.map((message) => (message.id == payload.id ? payload : message)),
+    editMessage: (state, { payload }) => (
+      state.map((message) => (message.id === payload.id ? payload : message))
+    ),
   },
 });
 

@@ -13,12 +13,13 @@ const saveAuthToLocalStorageMiddleware = (store) => (next) => (action) => {
   return result;
 };
 
-export const store = configureStore({
+export default configureStore({
   reducer: {
     auth: authReducer,
     channels: channelsReducer,
     messages: messagesReducer,
     mobileMenu: mobileMenuReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(saveAuthToLocalStorageMiddleware),
+  middleware: (getDefaultMiddleware) => (
+    getDefaultMiddleware().concat(saveAuthToLocalStorageMiddleware)),
 });
