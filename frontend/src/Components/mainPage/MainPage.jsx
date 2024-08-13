@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Container, Row, Spinner } from 'react-bootstrap';
 import LeoProfanity from 'leo-profanity';
 import { setChannelsList } from '../../slices/channelsSlice';
-import { selectCurrentUser } from '../../slices/authSlice';
+import { logout, selectCurrentUser } from '../../slices/authSlice';
 import { setMessages } from '../../slices/messagesSlice';
 import subscribeToSocketEvents from '../../socket';
 import routes from '../../routes';
@@ -13,26 +13,25 @@ import MainContainer from '../MainContainer';
 import Channels from './Channels';
 import Messages from './Messages';
 
-const fetchChannels = async (token, dispatch) => {
-  const res = await axios.get(routes.channelsPath(), {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  dispatch(setChannelsList(res.data)); /* eslint-disable-line */
-  return res.data;
+const fetchData = async (token, dispatch) => {
+  try {
+    const cahnnelsRes = await axios.get(routes.channelsPath(), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch(setChannelsList(cahnnelsRes.data)); /* eslint-disable-line */
+    const messagesRes = await axios.get(routes.messagesPath(), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch(setMessages(messagesRes.data)); /* eslint-disable-line */
+  } catch (e) {
+    dispatch(logout()); /* eslint-disable-line */
+    navigate('login'); /* eslint-disable-line */
+  }
 };
-
-const fetchMessages = async (token, dispatch) => {
-  const res = await axios.get(routes.messagesPath(), {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  dispatch(setMessages(res.data)); /* eslint-disable-line */
-  return res.data;
-};
-
 const MainPage = () => {
   const [loading, setLoading] = useState(true);
   const currentUser = useSelector(selectCurrentUser);
@@ -49,8 +48,7 @@ const MainPage = () => {
       if (!userString) { /* eslint-disable-line */
         navigate('login'); /* eslint-disable-line */
       } else { /* eslint-disable-line */
-        await fetchChannels(currentUser.token, dispatch); /* eslint-disable-line */
-        await fetchMessages(currentUser.token, dispatch); /* eslint-disable-line */
+        await fetchData /* eslint-disable-line */
         subscribeToSocketEvents(); /* eslint-disable-line */
         setLoading(false); /* eslint-disable-line */
       }
