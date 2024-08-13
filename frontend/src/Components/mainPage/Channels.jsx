@@ -214,7 +214,6 @@ const Channels = ({ filter }) => {
         },
       });
       channelRenamedNotify(); /* eslint-disable-line */
-      dispatch(setCurrentChannelId(+res.data.id)); /* eslint-disable-line */
       return res.data;
     } catch (error) {
       networkErrorNotify(); /* eslint-disable-line */
