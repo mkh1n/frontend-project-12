@@ -30,6 +30,7 @@ const slice = createSlice({
       const updatedChannels = state
         .channelsList.map((channel) => (channel.id === payload.id ? payload : channel));
       state.channelsList = updatedChannels; /* eslint-disable-line */
+      state.currentChannelId = payload.id; /* eslint-disable-line */
     },
     setCurrentChannelId: (state, { payload }) => {
       state.currentChannelId = payload; /* eslint-disable-line */

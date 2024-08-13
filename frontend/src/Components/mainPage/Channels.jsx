@@ -198,7 +198,6 @@ const Channels = ({ filter }) => {
         },
       });
       channelCreatedNotify(); /* eslint-disable-line */
-      dispatch(setCurrentChannelId(+res.data.id)); /* eslint-disable-line */
       return res.data;
     } catch (error) {
       networkErrorNotify(); /* eslint-disable-line */
