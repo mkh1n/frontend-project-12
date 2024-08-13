@@ -17,7 +17,7 @@ const slice = createSlice({
       state.channelsList.push(payload); /* eslint-disable-line */
     },
     removeChannel: (state, { payload }) => {
-      if (payload.id === state.currentChannelId) { /* eslint-disable-line */
+      if (+payload.id === +state.currentChannelId) { /* eslint-disable-line */
         state.currentChannelId = 1; /* eslint-disable-line */
       }
       const index = state.channelsList.findIndex((channel) => channel.id === payload.id);
