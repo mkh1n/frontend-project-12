@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Container, Row, Spinner } from 'react-bootstrap';
 import LeoProfanity from 'leo-profanity';
 import { setChannelsList } from '../../slices/channelsSlice';
-import { logout, selectCurrentUser } from '../../slices/authSlice';
+import { selectCurrentUser, logout } from '../../slices/authSlice';
 import { setMessages } from '../../slices/messagesSlice';
 import subscribeToSocketEvents from '../../socket';
 import routes from '../../routes';
@@ -13,30 +13,42 @@ import MainContainer from '../MainContainer';
 import Channels from './Channels';
 import Messages from './Messages';
 
-const fetchData = async (token, dispatch) => {
-  let channelsRes;/* eslint-disable-line */
-  let messagesRes;/* eslint-disable-line */
+const fetchChannels = async (token, dispatch, navigate) => {
   try {
-    channelsRes = await axios.get(routes.channelsPath(), {/* eslint-disable-line */
+    const res = await axios.get(routes.channelsPath(), {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    messagesRes = await axios.get(routes.messagesPath(), {/* eslint-disable-line */
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  } catch (e) {
-    dispatch(logout()); /* eslint-disable-line */
-    navigate('login'); /* eslint-disable-line */
+    dispatch(setChannelsList(res.data)); /* eslint-disable-line */  
+    return res.data;
+  } catch (error) {
+    if (error.response) { /* eslint-disable-line */
+      dispatch(logout()); /* eslint-disable-line */
+      navigate('login'); /* eslint-disable-line */
+    }
+    throw error;
   }
-  console.log(channelsRes.data);/* eslint-disable-line */
-  console.log(messagesRes.data);/* eslint-disable-line */
-  dispatch(setChannelsList(channelsRes.data)); /* eslint-disable-line */
-  dispatch(setMessages(messagesRes.data)); /* eslint-disable-line */
-
 };
+
+const fetchMessages = async (token, dispatch, navigate) => {
+  try {
+    const res = await axios.get(routes.messagesPath(), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch(setMessages(res.data)); /* eslint-disable-line */
+    return res.data;
+  } catch (error) {
+    if (error.response) { /* eslint-disable-line */
+      dispatch(logout()); /* eslint-disable-line */
+      navigate('login'); /* eslint-disable-line */
+    }
+    throw error;
+  }
+};
+
 const MainPage = () => {
   const [loading, setLoading] = useState(true);
   const currentUser = useSelector(selectCurrentUser);
@@ -53,9 +65,14 @@ const MainPage = () => {
       if (!userString) { /* eslint-disable-line */
         navigate('login'); /* eslint-disable-line */
       } else { /* eslint-disable-line */
-        fetchData /* eslint-disable-line */
-        subscribeToSocketEvents(); /* eslint-disable-line */
-        setLoading(false); /* eslint-disable-line */
+        try {
+          await fetchChannels(currentUser.token, dispatch, navigate); /* eslint-disable-line */
+          await fetchMessages(currentUser.token, dispatch, navigate); /* eslint-disable-line */
+          subscribeToSocketEvents(); /* eslint-disable-line */
+          setLoading(false); /* eslint-disable-line */
+        } catch (error) {
+          // Ошибка уже обработана в fetchChannels и fetchMessages
+        }
       }
     };
     loadPageData(); /* eslint-disable-line */
@@ -63,7 +80,7 @@ const MainPage = () => {
 
   return (
     <MainContainer>
-      {(loading) ? (
+      {loading ? (
         <div className="d-flex justify-content-center align-items-center vh-100">
           <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
