@@ -15,7 +15,7 @@ const Messages = ({ filter }) => {
   const bottomRef = useRef(null);
   const scrollBottomRef = useRef(null);
 
-  const currentChannelMessages = messages.filter((m) => m.channelId === currentChannelId);
+  const currentChannelMessages = messages.filter((m) => +m.channelId === +currentChannelId);
 
   const Scroll = () => {
     const { scrollTop } = container.current;
