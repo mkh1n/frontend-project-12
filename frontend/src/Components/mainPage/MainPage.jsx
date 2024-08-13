@@ -31,6 +31,8 @@ const fetchData = async (token, dispatch) => {
     dispatch(logout()); /* eslint-disable-line */
     navigate('login'); /* eslint-disable-line */
   }
+  console.log(channelsRes.data);/* eslint-disable-line */
+  console.log(messagesRes.data);/* eslint-disable-line */
   dispatch(setChannelsList(channelsRes.data)); /* eslint-disable-line */
   dispatch(setMessages(messagesRes.data)); /* eslint-disable-line */
 
@@ -51,7 +53,7 @@ const MainPage = () => {
       if (!userString) { /* eslint-disable-line */
         navigate('login'); /* eslint-disable-line */
       } else { /* eslint-disable-line */
-        await fetchData /* eslint-disable-line */
+        fetchData /* eslint-disable-line */
         subscribeToSocketEvents(); /* eslint-disable-line */
         setLoading(false); /* eslint-disable-line */
       }
