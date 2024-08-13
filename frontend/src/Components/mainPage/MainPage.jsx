@@ -14,23 +14,26 @@ import Channels from './Channels';
 import Messages from './Messages';
 
 const fetchData = async (token, dispatch) => {
+  let channelsRes;/* eslint-disable-line */
+  let messagesRes;/* eslint-disable-line */
   try {
-    const cahnnelsRes = await axios.get(routes.channelsPath(), {
+    channelsRes = await axios.get(routes.channelsPath(), {/* eslint-disable-line */
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    dispatch(setChannelsList(cahnnelsRes.data)); /* eslint-disable-line */
-    const messagesRes = await axios.get(routes.messagesPath(), {
+    messagesRes = await axios.get(routes.messagesPath(), {/* eslint-disable-line */
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    dispatch(setMessages(messagesRes.data)); /* eslint-disable-line */
   } catch (e) {
     dispatch(logout()); /* eslint-disable-line */
     navigate('login'); /* eslint-disable-line */
   }
+  dispatch(setChannelsList(channelsRes.data)); /* eslint-disable-line */
+  dispatch(setMessages(messagesRes.data)); /* eslint-disable-line */
+
 };
 const MainPage = () => {
   const [loading, setLoading] = useState(true);
