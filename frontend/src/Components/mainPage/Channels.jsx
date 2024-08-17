@@ -20,6 +20,7 @@ import routes from '../../routes';
 import {
   selectChannels, selectCurrentChannelId, setCurrentChannelId, setIsChannelCreator,
 } from '../../slices/channelsSlice';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const Channel = ({
@@ -193,7 +194,7 @@ const Channels = ({ filter }) => {
   ));
 
   const createChannelHandler = async (token, name) => {
-    setIsChannelCreator(true); /* eslint-disable-line */
+    dispatch(setIsChannelCreator(true));/* eslint-disable-line */
     try {
       const res = await axios.post(routes.channelsPath(), { name }, {
         headers: {
@@ -209,7 +210,7 @@ const Channels = ({ filter }) => {
   };
 
   const renameChannelHandler = (channelId) => async (token, name) => {
-    setIsChannelCreator(true); /* eslint-disable-line */
+    dispatch(setIsChannelCreator(true));/* eslint-disable-line */
     try {
       const res = await axios.patch(routes.channelPath(channelId), { name }, {
         headers: {
@@ -217,6 +218,8 @@ const Channels = ({ filter }) => {
         },
       });
       channelRenamedNotify(); /* eslint-disable-line */
+      console.log(isChannelCreator)/* eslint-disable-line */
+
       return res.data;
     } catch (error) {
       networkErrorNotify(); /* eslint-disable-line */
