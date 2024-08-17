@@ -44,6 +44,7 @@ const slice = createSlice({
     },
     setIsChannelCreator: (state, { payload }) => {
       state.isChannelCreator = payload; /* eslint-disable-line */
+      console.log(state.isChannelCreator)/* eslint-disable-line */
     },
   },
 });
