@@ -245,19 +245,11 @@ const Channels = ({ filter }) => {
   };
 
   useEffect(() => { /* eslint-disable-line */
-    const handleNewChannel = (payload) => {
-      dispatch(addChannel(payload)); /* eslint-disable-line */
-      if (isChannelCreator) { /* eslint-disable-line */
-        dispatch(setCurrentChannelId(payload.id)); /* eslint-disable-line */
-        setIsChannelCreator(false); /* eslint-disable-line */
-      }
-    };
-
-    socket.on('newChannel', handleNewChannel); /* eslint-disable-line */
-
-    return () => {
-      socket.off('newChannel', handleNewChannel); /* eslint-disable-line */
-    };
+    dispatch(addChannel(payload)); /* eslint-disable-line */
+    if (isChannelCreator) { /* eslint-disable-line */
+      dispatch(setCurrentChannelId(payload.id)); /* eslint-disable-line */
+      setIsChannelCreator(false); /* eslint-disable-line */
+    }
   }, [dispatch, isChannelCreator]);
 
   return (
