@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
+/* eslint-disable default-case */
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Nav, Button, Col, Modal, Form, Dropdown,
@@ -14,7 +18,7 @@ import { selectMessages } from '../../slices/messagesSlice';
 import { selectMobileMenuState, toggleMenu } from '../../slices/mobileMenuSlice';
 import routes from '../../routes';
 import {
-  selectChannels, selectCurrentChannelId, setCurrentChannelId, addChannel,
+  selectChannels, selectCurrentChannelId, setCurrentChannelId, setIsChannelCreator,
 } from '../../slices/channelsSlice';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -62,6 +66,7 @@ const ChannelModal = ({
   const f = useFormik({
     onSubmit: (values) => {
       setLoading(true); /* eslint-disable-line */
+      // eslint-disable-next-line no-unused-expressions
       action.name === 'remove' ? action.handler(token) : action.handler(token, values.channelName); /* eslint-disable-line */
       handleCloseModal(); /* eslint-disable-line */
       values.channelName = ''; /* eslint-disable-line */
@@ -128,14 +133,13 @@ const Channels = ({ filter }) => {
   const currentUser = useSelector(selectCurrentUser);
   const isMenuOpen = useSelector(selectMobileMenuState);
 
-  const channelCreatedNotify = () => toast.success(t('channelCreated')); /* eslint-disable-line */
-  const channelRemovedNotify = () => toast.success(t('channelRemoved')); /* eslint-disable-line */
-  const channelRenamedNotify = () => toast.success(t('channelRenamed')); /* eslint-disable-line */
-  const networkErrorNotify = () => toast.error(t('networkError')); /* eslint-disable-line */
+  const channelCreatedNotify = () => toast.success(t('channelCreated'));
+  const channelRemovedNotify = () => toast.success(t('channelRemoved'));
+  const channelRenamedNotify = () => toast.success(t('channelRenamed'));
+  const networkErrorNotify = () => toast.error(t('networkError'));
 
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
-  const [isChannelCreator, setIsChannelCreator] = useState(false);
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -154,8 +158,6 @@ const Channels = ({ filter }) => {
       case 'create': /* eslint-disable-line */
         description = t('channelCreateDescription'); /* eslint-disable-line */
         handler = createChannelHandler; /* eslint-disable-line */
-        break;
-      default: /* eslint-disable-line */
         break;
     }
     setModalAction({ /* eslint-disable-line */
@@ -197,8 +199,8 @@ const Channels = ({ filter }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      channelCreatedNotify(); /* eslint-disable-line */
       setIsChannelCreator(true); /* eslint-disable-line */
+      channelCreatedNotify(); /* eslint-disable-line */
       return res.data;
     } catch (error) {
       networkErrorNotify(); /* eslint-disable-line */
@@ -237,20 +239,13 @@ const Channels = ({ filter }) => {
           },
         });
       });
+      setIsChannelCreator(true); /* eslint-disable-line */
       channelRemovedNotify(); /* eslint-disable-line */
     } catch (error) {
       networkErrorNotify(); /* eslint-disable-line */
       throw error;
     }
   };
-
-  useEffect(() => { /* eslint-disable-line */
-    dispatch(addChannel(payload)); /* eslint-disable-line */
-    if (isChannelCreator) { /* eslint-disable-line */
-      dispatch(setCurrentChannelId(payload.id)); /* eslint-disable-line */
-      setIsChannelCreator(false); /* eslint-disable-line */
-    }
-  }, [dispatch, isChannelCreator]);
 
   return (
     <Col
