@@ -193,13 +193,13 @@ const Channels = ({ filter }) => {
   ));
 
   const createChannelHandler = async (token, name) => {
+    setIsChannelCreator(true); /* eslint-disable-line */
     try {
       const res = await axios.post(routes.channelsPath(), { name }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setIsChannelCreator(true); /* eslint-disable-line */
       channelCreatedNotify(); /* eslint-disable-line */
       return res.data;
     } catch (error) {
@@ -209,6 +209,7 @@ const Channels = ({ filter }) => {
   };
 
   const renameChannelHandler = (channelId) => async (token, name) => {
+    setIsChannelCreator(true); /* eslint-disable-line */
     try {
       const res = await axios.patch(routes.channelPath(channelId), { name }, {
         headers: {
@@ -239,7 +240,6 @@ const Channels = ({ filter }) => {
           },
         });
       });
-      setIsChannelCreator(true); /* eslint-disable-line */
       channelRemovedNotify(); /* eslint-disable-line */
     } catch (error) {
       networkErrorNotify(); /* eslint-disable-line */
