@@ -63,7 +63,7 @@ const Message = ({
   const isMessageMine = username === currentUser.name;
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
+  console.log(id, body)/* eslint-disable-line */
   const lines = body.split('\n').map((line, index) => (
     // eslint-disable-next-line react/no-array-index-key
     <div key={index}><Anchorme target="_blank">{filter.clean(line)}</Anchorme></div>
@@ -79,11 +79,12 @@ const Message = ({
 
   const editMessageHandler = async (messageId, token, messageBody) => {
     try {
-      const res = await axios.patch(routes.messagePath(messageId), { messageBody }, {
+      const res = await axios.patch(routes.messagePath(messageId), { body: messageBody }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(res.data)/* eslint-disable-line */
       messageEditedNotify(); /* eslint-disable-line */
       return res.data;
     } catch (error) {

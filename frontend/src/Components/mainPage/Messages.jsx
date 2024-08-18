@@ -43,7 +43,7 @@ const Messages = ({ filter }) => {
   useEffect(() => { /* eslint-disable-line */
     bottomRef.current?.scrollIntoView(); /* eslint-disable-line */
   }, [currentChannelId]);
-
+  console.log(currentChannelMessages)/* eslint-disable-line */
   const messagesList = currentChannelMessages.map((message) => (
     <Message
       username={message.username}
